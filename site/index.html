@@ -398,7 +398,10 @@
      'https://kary-mo.YOURNAME.workers.dev/api/telegram/order' */
   /* ⚠️ غيّر الرابط ده لرابط Cloudflare Worker بتاعك
      مثال: 'https://kary-mo.myname.workers.dev/api/telegram/order' */
-  const API_URL = 'https://kary-mo.mostafaraay056.workers.dev/api/telegram/order';
+  // استخدام Telegram Bot API مباشرة
+  const TELEGRAM_BOT_TOKEN = '9096631294:AAEW_2g62fu-y-Y1coH-WApgA8xfXq7lwqo';
+  const TELEGRAM_CHAT_ID = '9096631294';
+  const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
   const heroRosters = {
     infantry: ['قلاوون', 'ماوية', 'زينب', 'أرطغرل', 'محمد الثاني', 'عمر المختار'],
@@ -1085,14 +1088,23 @@
       for (let offset = 0; offset < bytes.length; offset += 0x8000) {
         binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
       }
-      const photo = `data:${image.type};base64,${btoa(binary)}`;
-      const response = await fetch(API_URL, {
+      const formData = new FormData();
+      formData.append('chat_id', TELEGRAM_CHAT_ID);
+      formData.append('photo', image);
+      formData.append('caption', '🏰 عرض بيع قلعة جديد');
+      const response = await fetch(`${TELEGRAM_API}/sendPhoto`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: buildTelegramLeadMessage(), photo })
+        body: formData
       });
-      const result = await response.json();
-      if (!response.ok || !result.ok) throw new Error(result.error || 'تعذر إرسال الطلب.');
+      const result = { ok: response.ok };
+      if (result.ok) {
+        const msgResponse = await fetch(`${TELEGRAM_API}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: buildTelegramLeadMessage(), parse_mode: 'HTML' })
+        });
+        if (!msgResponse.ok) throw new Error('تعذر إرسال التفاصيل.');
+      }
       button.textContent = 'تم إرسال الصورة والتفاصيل ✓';
       status.textContent = 'وصلت صورة الإعلان والتفاصيل بنجاح إلى تيليجرام.';
     } catch (error) {
