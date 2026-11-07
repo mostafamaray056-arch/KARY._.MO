@@ -705,17 +705,12 @@
   const API_ROOT = API_URL.replace(/\/api\/telegram\/order\/?$/, '');
   const apiUrl = (path) => `${API_ROOT}${path}`;
 
-  const heroRosters = {
-    infantry: ['قلاوون', 'ماوية', 'زينب', 'أرطغرل', 'محمد الثاني', 'عمر المختار'],
-    chariots: ['كافور الإخشيدي', 'نفرتيتي', 'زبيدة بنت جعفر', 'مالك بن الريب', 'قطز', 'برقوق', 'صلاح الدين'],
-    cavalry: ['بوراك', 'عبدالرحمن', 'هارون الرشيد', 'الإسكندر الأكبر', 'بارون', 'جوهر الصقلي'],
-    archers: ['قايتباي', 'خير الدين بربروس', 'كوسم', 'حليمة خاتون', 'أتيلا الهوني', 'أورخان غازي', 'زرقاء اليمامة']
-  };
+  const primaryAdHeroNames = ['صلاح الدين', 'برقوق', 'قطز', 'محمد الثاني', 'عمر المختار', 'كافور الإخشيدي', 'مالك بن الريب'];
+  // الأبطال الأساسيون يُختارون من قائمة، والإضافيون يكتبهم الزبون بنفسه
+  const heroRosters = { main: primaryAdHeroNames };
   const categories = [
-    { key: 'infantry', title: 'المشاة', icon: '⚔️' },
-    { key: 'chariots', title: 'العجلات', icon: '🛞' },
-    { key: 'cavalry', title: 'الفرسان', icon: '🐎' },
-    { key: 'archers', title: 'الرماة', icon: '🏹' }
+    { key: 'main', text: 'اختار أبطال القلعة (صلاح الدين، برقوق، قطز، محمد الثاني، عمر المختار، كافور الإخشيدي، مالك بن الريب) 👑' },
+    { key: 'extra', text: 'اكتب أسماء الأبطال الإضافيين 🛡️' }
   ];
   const heroPortraits = {
     'قلاوون': 'qalawun.jpg',
@@ -745,7 +740,7 @@
     'أورخان غازي': 'orhan.jpg',
     'زرقاء اليمامة': 'zarqa.jpg'
   };
-  const primaryAdHeroNames = ['صلاح الدين', 'برقوق', 'قطز', 'محمد الثاني', 'عمر المختار', 'كافور الإخشيدي', 'مالك بن الريب'];
+  const heroSuggestions = Object.keys(heroPortraits).filter((name) => !primaryAdHeroNames.includes(name));
   const questions = [
     { key: 'whatsapp', text: 'العرض 🦆', type: 'tel', placeholder: 'رقم واتساب بكود الدولة، مثال: +201012345678' },
     { key: 'links', text: 'اختار الروابط 🔗', type: 'multiselect', options: ['IGG', 'Google', 'Facebook', 'iPhone', 'Game Center', 'Device Binding'] },
@@ -753,7 +748,7 @@
     { key: 'science', text: 'العلوم 🔬', type: 'number', placeholder: 'من 1 إلى 225، الكسور مسموحة', min: 1, max: 225, decimals: true },
     { key: 'reserve', text: 'الاحتياط 🥋', type: 'number', placeholder: '0 أو من 1 إلى 79 مليون، ومن 80 إلى 1000 ألف', min: 0, max: 1000, unit: 'reserve' },
     { key: 'seals', text: 'الأختام 🏆', type: 'number', placeholder: 'من 0 إلى 1000 ختم', min: 0, max: 1000, unit: ' ختم' },
-    ...categories.map((category) => ({ key: `heroes_${category.key}`, text: `اختار أبطال ${category.title} أصحاب مؤشر القوة 5 نجوم ${category.icon}`, type: 'heroes', category })),
+    ...categories.map((category) => ({ key: `heroes_${category.key}`, text: category.text, type: 'heroes', category })),
     { key: 'bag', text: 'الحقيبة 💕', type: 'select', options: ['كويسة', 'متوسطة', 'وحشة'] },
     { key: 'resources', text: 'الموارد', type: 'select', options: ['كويسة', 'متوسطة', 'وحشة'] },
     { key: 'gold', text: 'الذهب 🪙', type: 'number', placeholder: 'من 1 إلى 100,000,000، الكسور مسموحة', min: 1, max: 100000000, decimals: true },
@@ -862,21 +857,18 @@
   }
 
   function getAdvertisedHeroEntries() {
-    // الأبطال الأساسيون (من القائمة المحددة) لهم الأولوية في الخانات الرئيسية، والباقي إضافيون
-    let primarySlots = 5;
-    return categories.flatMap((category) => (answers[`heroes_${category.key}`]?.entries || [])
-      .filter((entry) => entry.name && (Number(entry.normal) >= 3 || (canShowRedHilal() && Number(entry.red) > 0)))
-      .map((entry) => {
-        const primary = primarySlots > 0 && primaryAdHeroNames.includes(entry.name);
-        if (primary) primarySlots -= 1;
-        return {
-          name: entry.name,
-          normal: Number(entry.normal),
-          red: canShowRedHilal() ? Number(entry.red || 0) : 0,
-          portrait: heroPortraits[entry.name],
-          primary
-        };
-      }));
+    const toHero = (entry, primary) => ({
+      name: String(entry.name).trim(),
+      normal: Number(entry.normal || 0),
+      red: canShowRedHilal() ? Number(entry.red || 0) : 0,
+      portrait: heroPortraits[String(entry.name).trim()],
+      primary
+    });
+    const named = (key) => (answers[`heroes_${key}`]?.entries || []).filter((entry) => String(entry.name || '').trim());
+    // أبطال القلعة: أول 5 فقط فوق، وما زاد عنهم ينزل مع الإضافيين
+    const main = named('main').map((entry, index) => toHero(entry, index < 5));
+    const extras = named('extra').map((entry) => toHero(entry, false));
+    return [...main, ...extras];
   }
 
   function formatHeroEntry(entry) {
@@ -1688,6 +1680,8 @@
         ctx.clip();
         drawCoverImage(ctx, image, x + inset, y + inset, width - inset * 2, height - moonBandHeight - inset * 2, 0.3);
         ctx.restore();
+      } else {
+        drawReferenceText(hero.name, x + width / 2, y + inset + (height - moonBandHeight - inset * 2) / 2, width - inset * 4, 22, '#fff0c9', 900, 'center');
       }
       const bandX = x + inset;
       const bandY = y + height - moonBandHeight - 2;
@@ -2062,42 +2056,59 @@
 
   function renderHeroQuestion(q) {
     const state = answers[q.key] || { none: false, entries: [] };
-    const entries = state.entries.map((entry, index) => {
-      const selectedHero = entry.name
-        ? `<div class="hero-info">
-            <img class="hero-portrait" src="hero-portraits/${escapeHTML(heroPortraits[entry.name])}" alt="صورة البطل ${escapeHTML(entry.name)}">
+    const isExtra = q.category.key === 'extra';
+    const maxEntries = isExtra ? 6 : heroRosters.main.length;
+    const moonFields = (entry) => `
             <div class="hero-moon-fields">
-              <label>⭐⭐⭐⭐⭐ مؤشر القوة 5 نجوم
-                <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="normal" value="${escapeHTML(entry.normal ?? '')}" placeholder="عدد الهلال الأصفر (0–5)" aria-label="عدد الهلال الأصفر">
+              <label>🌙 عدد الهلال الأصفر (اختياري)
+                <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="normal" value="${escapeHTML(entry.normal ?? '')}" placeholder="من 0 إلى 5" aria-label="عدد الهلال الأصفر">
               </label>
-              ${canShowRedHilal() ? `<label>الهلال الأحمر
-                <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="red" value="${escapeHTML(entry.red ?? '0')}" placeholder="عدد الهلال الأحمر (0–5)" aria-label="عدد الهلال الأحمر">
+              ${canShowRedHilal() ? `<label>الهلال الأحمر (اختياري)
+                <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="red" value="${escapeHTML(entry.red ?? '0')}" placeholder="من 0 إلى 5" aria-label="عدد الهلال الأحمر">
               </label>` : ''}
-            </div>
-          </div>`
-        : '<p class="lead-note">اختار البطل الأول عشان تظهر خانات الهلال.</p>';
-      const options = heroRosters[q.category.key].map((name) => {
-        const selectedElsewhere = state.entries.some((other, otherIndex) => otherIndex !== index && other.name === name);
-        return `<option value="${escapeHTML(name)}" ${entry.name === name ? 'selected' : ''} ${selectedElsewhere ? 'disabled' : ''}>${escapeHTML(name)}</option>`;
-      }).join('');
+            </div>`;
+    const entries = state.entries.map((entry, index) => {
+      let nameField;
+      let details;
+      if (isExtra) {
+        nameField = `<input class="input hero-name" type="text" list="heroSuggestions" maxlength="40" data-hero-field="name" value="${escapeHTML(entry.name ?? '')}" placeholder="اكتب اسم البطل" aria-label="اسم البطل">`;
+        details = moonFields(entry);
+      } else {
+        const options = heroRosters.main.map((name) => {
+          const selectedElsewhere = state.entries.some((other, otherIndex) => otherIndex !== index && other.name === name);
+          return `<option value="${escapeHTML(name)}" ${entry.name === name ? 'selected' : ''} ${selectedElsewhere ? 'disabled' : ''}>${escapeHTML(name)}</option>`;
+        }).join('');
+        nameField = `<select class="input hero-name" data-hero-field="name" aria-label="اختيار بطل">
+            <option value="">اختار بطلًا من القائمة</option>${options}
+          </select>`;
+        details = entry.name
+          ? `<div class="hero-info">
+              <img class="hero-portrait" src="hero-portraits/${escapeHTML(heroPortraits[entry.name])}" alt="صورة البطل ${escapeHTML(entry.name)}">
+              ${moonFields(entry)}
+            </div>`
+          : '<p class="lead-note">اختار البطل الأول عشان تظهر خانات الهلال.</p>';
+      }
       return `
         <div class="hero-entry" data-hero-index="${index}">
-          <select class="input hero-name" data-hero-field="name" aria-label="اختيار بطل">
-            <option value="">اختار بطلًا من القائمة</option>${options}
-          </select>
-          ${selectedHero}
+          ${nameField}
+          ${details}
           <button class="small-btn" type="button" data-remove-hero="${index}">حذف البطل</button>
         </div>
       `;
     }).join('');
     const isNone = state.none;
+    const noneLabel = isExtra ? 'لا يوجد أبطال إضافيين' : 'لا يوجد أبطال من هذه القائمة';
+    const note = isExtra
+      ? 'اكتب اسم أي بطل إضافي (حتى 6 في الإعلان). لو اخترت أكتر من 5 أبطال قلعة فالزيادة بتنزل هنا تلقائيًا.'
+      : 'أول 5 أبطال بيظهروا في «أبطال القلعة» في الإعلان، ولو اخترت 6 أو 7 فالباقي بينزل مع الأبطال الإضافيين.';
     return `<div class="field-wrap">
+      ${isExtra ? `<datalist id="heroSuggestions">${heroSuggestions.map((name) => `<option value="${escapeHTML(name)}"></option>`).join('')}</datalist>` : ''}
       ${entries}
       <div class="hero-actions">
-        <button class="small-btn" type="button" data-add-hero ${state.entries.length >= heroRosters[q.category.key].length ? 'disabled' : ''}>إضافة بطل</button>
-        <button class="small-btn" type="button" data-no-heroes>${isNone ? 'تم اختيار: لا يوجد' : 'لا يوجد أبطال من هذه الفئة'}</button>
+        <button class="small-btn" type="button" data-add-hero ${state.entries.length >= maxEntries ? 'disabled' : ''}>إضافة بطل</button>
+        <button class="small-btn" type="button" data-no-heroes>${isNone ? 'تم اختيار: لا يوجد' : noneLabel}</button>
       </div>
-      <p class="lead-note">${canShowRedHilal() ? 'اكتب الهلال الأصفر والأحمر. ' : 'اكتب الهلال الأصفر؛ الهلال الأحمر متاح من مستوى قلعة 31. '}أبطال صلاح الدين وبرقوق وقطز ومحمد الثاني وعمر المختار وكافور الإخشيدي ومالك بن الريب لهم الأولوية في الإعلان (حتى 5)، وباقي الأبطال يظهرون في الأبطال الإضافيين (حتى 6).</p>
+      <p class="lead-note">${canShowRedHilal() ? '' : 'الهلال الأحمر متاح من مستوى قلعة 31. '}${note}</p>
     </div>`;
   }
 
@@ -2226,7 +2237,7 @@
           <strong>الفيلق (${heroes.length} أبطال):</strong>
           <div class="legion-summary">${heroes.map((entry) => `
             <div class="legion-hero">
-              <img src="hero-portraits/${escapeHTML(entry.portrait)}" alt="صورة البطل ${escapeHTML(entry.name)}">
+              ${entry.portrait ? `<img src="hero-portraits/${escapeHTML(entry.portrait)}" alt="صورة البطل ${escapeHTML(entry.name)}">` : ''}
               <strong>${entry.primary ? 'أساسي: ' : 'إضافي: '}${escapeHTML(entry.name)}</strong>
               <span>${renderMoonRow(entry.normal, entry.red)}</span>
             </div>
@@ -2320,9 +2331,8 @@
         const entries = answers[q.key]?.entries || [];
         const entry = entries[index] || {};
         row.querySelectorAll('[data-hero-field]').forEach((input) => {
-          entry[input.dataset.heroField] = input.type === 'checkbox' ? input.checked : input.value;
+          entry[input.dataset.heroField] = input.value;
         });
-        if (!primaryAdHeroNames.includes(entry.name)) entry.primary = false;
         entries[index] = entry;
         answers[q.key] = { none: false, entries };
       };
@@ -2330,12 +2340,13 @@
         input.addEventListener('input', () => saveHeroEntry(input.closest('.hero-entry')));
         input.addEventListener('change', () => {
           saveHeroEntry(input.closest('.hero-entry'));
-          if (input.dataset.heroField === 'name' || input.dataset.heroField === 'primary') renderCurrentStep();
+          if (input.tagName === 'SELECT') renderCurrentStep();
         });
       });
       leadCard.querySelector('[data-add-hero]').addEventListener('click', () => {
         const entries = answers[q.key]?.entries || [];
-        if (entries.length < heroRosters[q.category.key].length) entries.push({ name: '', normal: '', red: '0' });
+        const maxEntries = q.category.key === 'extra' ? 6 : heroRosters.main.length;
+        if (entries.length < maxEntries) entries.push({ name: '', normal: '', red: '0' });
         answers[q.key] = { none: false, entries };
         renderCurrentStep();
       });
@@ -2418,32 +2429,38 @@
         alert('أضف بطلًا واحدًا على الأقل أو اختر «لا يوجد».');
         return;
       }
-      const selectedNames = state.entries.map((entry) => entry.name);
+      const isExtraStep = q.category.key === 'extra';
+      const selectedNames = state.entries.map((entry) => String(entry.name || '').trim());
+      if (selectedNames.some((name) => !name)) {
+        alert(isExtraStep ? 'اكتب اسم البطل أو احذف الخانة الفاضية.' : 'اختار بطلًا من القائمة أو احذف الخانة الفاضية.');
+        return;
+      }
       if (new Set(selectedNames).size !== selectedNames.length) {
-        alert('اختار كل بطل مرة واحدة فقط.');
+        alert(isExtraStep ? 'اكتب كل بطل مرة واحدة فقط.' : 'اختار كل بطل مرة واحدة فقط.');
+        return;
+      }
+      if (isExtraStep && selectedNames.some((name) => primaryAdHeroNames.includes(name))) {
+        alert('الأبطال الأساسيون (صلاح الدين وبرقوق وقطز ومحمد الثاني وعمر المختار وكافور الإخشيدي ومالك بن الريب) اختارهم من الخطوة الأولى.');
+        return;
+      }
+      if (!isExtraStep && selectedNames.some((name) => !heroRosters.main.includes(name))) {
+        alert('اختار بطلًا من القائمة.');
         return;
       }
       for (const entry of state.entries) {
-        if (!heroRosters[q.category.key].includes(entry.name) || entry.normal === '' || (canShowRedHilal() && entry.red === '')) {
-          alert(canShowRedHilal() ? 'اختار بطلًا واكتب عدد الهلال الأصفر والأحمر.' : 'اختار بطلًا واكتب عدد الهلال الأصفر.');
-          return;
-        }
-        const yellowCount = Number(entry.normal);
-        const redCount = Number(entry.red);
-        if (!Number.isInteger(yellowCount) || yellowCount < 0 || yellowCount > 5 || (canShowRedHilal() && (!Number.isInteger(redCount) || redCount < 0 || redCount > yellowCount))) {
+        entry.name = String(entry.name).trim();
+        const yellowCount = entry.normal === '' || entry.normal === undefined ? 0 : Number(entry.normal);
+        const redCount = !canShowRedHilal() || entry.red === '' || entry.red === undefined ? 0 : Number(entry.red);
+        if (!Number.isInteger(yellowCount) || yellowCount < 0 || yellowCount > 5 || !Number.isInteger(redCount) || redCount < 0 || redCount > yellowCount) {
           alert(canShowRedHilal()
             ? 'الهلال الأصفر يجب أن يكون من 0 إلى 5، والهلال الأحمر من 0 إلى عدد الهلال الأصفر.'
             : 'الهلال الأصفر يجب أن يكون من 0 إلى 5.');
           return;
         }
       }
-      if (state.entries.some((entry) => Number(entry.normal) < 3 && (!canShowRedHilal() || Number(entry.red) === 0))) {
-        alert('للعرض، اختر أبطال فئة 5 نجوم ولديهم 3 هلال أصفر على الأقل أو هلال أحمر.');
-        return;
-      }
-      if (q.category.key === categories[categories.length - 1].key
+      if (isExtraStep
         && getAdvertisedHeroEntries().filter((entry) => !entry.primary).length > 6) {
-        alert('الإعلان يستوعب 6 أبطال إضافيين فقط. احذف أبطالًا إضافيين قبل المتابعة.');
+        alert('الإعلان يستوعب 6 أبطال إضافيين فقط (بما فيهم أبطال القلعة الزيادة عن 5). احذف بعضهم قبل المتابعة.');
         return;
       }
     }
@@ -2484,7 +2501,7 @@
     }
 
     if (currentStep === activeQuestions.length - 1 && getAdvertisedHeroEntries().length < 5) {
-      alert('لازم تضيف 5 أبطال مؤهلين على الأقل إلى الفيلق قبل مراجعة الإعلان.');
+      alert('لازم تضيف 5 أبطال على الأقل (أبطال القلعة والإضافيين) قبل مراجعة الإعلان.');
       return;
     }
 
