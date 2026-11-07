@@ -1657,7 +1657,7 @@
       ['الإشعال', 'ignition']
     ];
     referenceRows.forEach(([label, key], index) => {
-      drawReferenceText(`${label}: ${adAnswer(key)}`, 730, 574 + index * 49, 243, 19, '#fff0c9', 800, 'right');
+      drawReferenceText(`${label}: ${adAnswer(key)}`, 730, 574 + index * 49, 246, 23, '#fff0c9', 900, 'right');
     });
 
     ctx.save();
@@ -1673,7 +1673,7 @@
     ctx.shadowBlur = 7;
     ctx.stroke();
     ctx.restore();
-    drawReferenceText('كارينا عمتك', 590, 1025, 180, 24, '#fff0a5', 900);
+    drawReferenceText('كارينا عمتك', 590, 1025, 180, 26, '#fff0a5', 900);
     ctx.save();
     ctx.strokeStyle = 'rgba(255, 213, 105, .68)';
     ctx.lineWidth = 1;
@@ -1682,8 +1682,8 @@
     ctx.lineTo(695, 1049);
     ctx.stroke();
     ctx.restore();
-    drawReferenceText(`الحقيبة والموارد: ${adAnswer('bag')} / ${adAnswer('resources')}`, 590, 1067, 260, 17, '#fff4d8', 800);
-    drawReferenceText(`رقم العرض: ${answers.offerNumber || '—'}`, 590, 1092, 250, 17, '#ffe08a', 900);
+    drawReferenceText(`الحقيبة والموارد: ${adAnswer('bag')} / ${adAnswer('resources')}`, 590, 1067, 270, 20, '#fff4d8', 900);
+    drawReferenceText(`رقم العرض: ${answers.offerNumber || '—'}`, 590, 1092, 260, 20, '#ffe08a', 900);
 
     const referenceMainHeroes = mainHeroes;
     const referenceExtraHeroes = extraHeroes;
@@ -1865,6 +1865,56 @@
     referenceMainHeroes.forEach((hero, index) => {
       drawCastleHero(hero, heroImages[heroes.indexOf(hero)], mainHeroFrames[index]);
     });
+    // بطتان وبعض اللمعات البيضاء في الفراغ بجانب آخر صف إذا لم يكتمل
+    const lastRowCount = castleRows[castleRows.length - 1] || 0;
+    if (lastRowCount && lastRowCount < 3) {
+      const lastRow = mainHeroFrames.slice(-lastRowCount);
+      const centerY = lastRow[0].y + lastRow[0].height / 2;
+      const leftEdge = lastRow[0].x;
+      const rightEdge = lastRow[lastRow.length - 1].x + lastRow[lastRow.length - 1].width;
+      const sides = [
+        { centerX: (castleArea.x + leftEdge) / 2, space: leftEdge - castleArea.x },
+        { centerX: (rightEdge + castleArea.x + castleArea.width) / 2, space: castleArea.x + castleArea.width - rightEdge }
+      ];
+      const drawSpark = (sx, sy, r) => {
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 255, 255, .92)';
+        ctx.shadowColor = 'rgba(255, 255, 255, .85)';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - r);
+        ctx.quadraticCurveTo(sx, sy, sx + r, sy);
+        ctx.quadraticCurveTo(sx, sy, sx, sy + r);
+        ctx.quadraticCurveTo(sx, sy, sx - r, sy);
+        ctx.quadraticCurveTo(sx, sy, sx, sy - r);
+        ctx.fill();
+        ctx.restore();
+      };
+      const drawDot = (dx, dy, r) => {
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 255, 255, .8)';
+        ctx.beginPath();
+        ctx.arc(dx, dy, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      };
+      sides.forEach(({ centerX, space }) => {
+        if (space < 40) return;
+        const size = Math.min(54, space - 10);
+        ctx.save();
+        ctx.font = `${size}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.direction = 'ltr';
+        ctx.fillText('🦆', centerX, centerY);
+        ctx.restore();
+        drawSpark(centerX - size * 0.42, centerY - size * 0.62, 4.5);
+        drawSpark(centerX + size * 0.46, centerY + size * 0.6, 3.5);
+        drawDot(centerX + size * 0.5, centerY - size * 0.5, 2);
+        drawDot(centerX - size * 0.5, centerY + size * 0.52, 1.8);
+        drawDot(centerX + size * 0.12, centerY - size * 0.78, 1.5);
+      });
+    }
     referenceExtraHeroes.forEach((hero, index) => {
       drawReferenceHero(hero, heroImages[heroes.indexOf(hero)], extraHeroFrames[index]);
     });
