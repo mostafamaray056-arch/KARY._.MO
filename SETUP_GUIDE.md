@@ -1,11 +1,21 @@
 # 🚀 دليل تشغيل KARY..MO — إرسال الإعلانات لـ تيليجرام
 
-## المشكلة الحالية
-الموقع على GitHub Pages لكن GitHub Pages **ما تدعمش إرسال requests لـ تيليجرام**. لازم نستخدم سيرفر وسيط (Proxy Server).
+## إرسال الإعلانات من GitHub Pages باستخدام Render
 
----
+GitHub Pages لا يشغّل `server.js` ولا يقرأ `.env`. ملف `render.yaml` يجهز خادم Node لإرسال الإعلانات، مع إبقاء توكن البوت داخل أسرار Render.
 
-## ✅ الحل: إعداد Cloudflare Worker (مجاني تماماً)
+1. ارفع المشروع من جذر المستودع إلى GitHub، من غير ملف `.env`.
+2. في Render أنشئ **Blueprint** من المستودع وطبّق ملف `render.yaml`.
+3. أضف `TELEGRAM_BOT_TOKEN` و`TELEGRAM_CHAT_ID` كـ Secrets للخدمة.
+4. تأكد أن `ALLOWED_ORIGINS` يساوي `https://mostafamaray056-arch.github.io`.
+5. بعد النشر، تأكد من عمل `/health` على عنوان الخدمة.
+6. تأكد أن `site/runtime-config.js` يشير إلى عنوان الخدمة وينتهي بـ `/api/telegram/order`، ثم ارفع ملفات `site/` إلى GitHub Pages.
+
+الخدمة المجانية قد تدخل وضع السكون، فيتأخر أول طلب بعد فترة خمول. لا تضع التوكن في ملفات الموقع ولا ترسله لأحد.
+
+## إعداد Cloudflare Worker القديم (اختياري لوظائف لوحة الإدارة)
+
+الخطوات التالية منفصلة عن إرسال إعلانات القلاع عبر Render. استخدمها فقط إذا أردت تشغيل لوحة الإدارة وطلبات الباقات التي تعتمد على Cloudflare Worker وKV.
 
 ### الخطوة 1️⃣: إنشاء حساب Cloudflare
 1. اذهب إلى https://dash.cloudflare.com
@@ -26,12 +36,13 @@
 ### الخطوة 4️⃣: إضافة المتغيرات السرية
 1. روح **Settings** (في الـ Worker)
 2. اختر **Variables and Secrets**
-3. أضف ثلاث متغيرات:
+3. أضف المتغيرات التالية:
 
 | الاسم | النوع | القيمة |
 |---|---|---|
 | `TELEGRAM_BOT_TOKEN` | Secret | توكن البوت من BotFather |
 | `TELEGRAM_CHAT_ID` | Secret | رقم الشات بتاعك |
+| `ADMIN_TELEGRAM_ID` | Secret | User ID الشخصي للأدمن الذي يرسله @userinfobot |
 | `ALLOWED_ORIGIN` | Text | `https://mostafamaray056-arch.github.io` |
 
 #### إزاي تجيب التوكن والـ Chat ID:
@@ -53,12 +64,21 @@
 2. الرابط شكله: `https://kary-mo.xxxxxx.workers.dev`
 
 ### الخطوة 6️⃣: تحديث الموقع
-1. افتح ملف `site/index.html`
-2. ادور على السطر اللي فيه:
+1. افتح ملف `site/runtime-config.js`
+2. غيّر الرابط الموجود إلى رابط الـ Worker:
    ```javascript
-   const API_URL = 'https://kary-mo.REPLACE_WITH_YOUR_WORKER.workers.dev/api/telegram/order';
+   window.KARY_API_URL = 'https://kary-mo.REPLACE_WITH_YOUR_WORKER.workers.dev/api/telegram/order';
    ```
-3. غيّر `REPLACE_WITH_YOUR_WORKER` برقم الـ Worker بتاعك
+3. غيّر `REPLACE_WITH_YOUR_WORKER` برابط الـ Worker بتاعك، ثم ارفع محتويات `site/` كلها على GitHub Pages، بما فيها `admin.html` و`runtime-config.js`.
+
+### تفعيل لوحة الإدارة وطلبات الباقات
+1. أنشئ **KV namespace** في Cloudflare، ثم أضف binding باسم `APP_DATA` في إعدادات الـ Worker واربطه بالـ namespace. تُحفظ فيه الأسعار ورسالة الترحيب وأسئلة الفورم وطلبات الاشتراك.
+2. أضف `ADMIN_TELEGRAM_ID` كـ **Secret** في إعدادات الـ Worker. استخدم رقم User ID لحساب الأدمن من @userinfobot؛ ليس رقم الهاتف أو Bot ID أو توكن البوت.
+3. في تيليجرام افتح @BotFather → `/mybots` → اختر البوت → **Bot Settings → Menu Button → Configure menu button**. اربط زر القائمة برابط الموقع المنشور، مثل `https://mostafamaray056-arch.github.io/KARY._.MO/`.
+4. افتح الموقع من زر القائمة في تيليجرام. حساب الأدمن فقط سيظهر له رابط **لوحة إدارة البوت**. من `admin.html` يمكن تعديل الترحيب والباقات وأسئلة فورم القلاع، ومراجعة طلبات الاشتراك بالموافقة أو الرفض.
+5. طلبات الاشتراك تُحفظ في KV لمدة 90 يومًا وتصل كذلك إلى `TELEGRAM_CHAT_ID`.
+
+> طلب الاشتراك ولوحة الإدارة يحتاجان فتح الموقع من داخل البوت على تيليجرام؛ الرابط العادي في المتصفح لا يوفر بيانات هوية Telegram الموقعة.
    - مثال: `https://kary-mo.myname123.workers.dev/api/telegram/order`
 
 4. احفظ الملف

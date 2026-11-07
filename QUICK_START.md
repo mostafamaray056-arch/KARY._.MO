@@ -1,108 +1,23 @@
-# ⚡ البدء السريع — 5 دقائق فقط
+# ⚡ تشغيل إرسال إعلانات GitHub Pages
 
-## المشكلة اللي صارت
-الموقع كان بيحاول يبعت الإعلانات لتليجرام من GitHub Pages، لكن **GitHub Pages ما تدعمش API requests**. 
+GitHub Pages لا يشغّل `server.js` أو يقرأ `.env`. ليرسل نموذج الإعلان إلى تيليجرام، انشر خادم Node على Render؛ ملف `render.yaml` يجهز الإعدادات المطلوبة.
 
-✅ **الحل**: استخدام Cloudflare Worker (سيرفر مجاني).
+## 🚀 الخطوات
 
----
+1. ارفع المشروع من جذر المستودع إلى GitHub، **من غير** ملف `.env`.
+2. في Render اختر إنشاء **Blueprint**، واربط المستودع وطبّق `render.yaml`.
+3. أضف `TELEGRAM_BOT_TOKEN` و`TELEGRAM_CHAT_ID` كـ Secrets في إعدادات الخدمة.
+4. انتظر نجاح النشر، وتأكد أن عنوان الخدمة هو `https://kary-mo-telegram-api-056-arch.onrender.com`.
+5. إذا كان عنوان Render مختلفًا، حدّث `site/runtime-config.js` به وينتهي بـ `/api/telegram/order`.
+6. ارفع ملفات `site/` على GitHub Pages، بما فيها `runtime-config.js`.
+7. افتح الموقع المنشور وجرّب إرسال إعلان اختباري.
 
-## 🚀 اتبع هذه الخطوات
+الخادم يسمح بطلبات صفحة GitHub المحددة فقط. لا تضع توكن البوت في ملفات الموقع ولا ترسله في المحادثات. قد تدخل الخدمة المجانية في وضع السكون، فيتأخر أول طلب بعد الخمول.
 
-### 1️⃣ اعمل حساب Cloudflare (5 دقائق)
-- اذهب: https://dash.cloudflare.com
-- اعمل حساب جديد
-- لوج إن
+## 🧪 اختبار الإرسال
 
-### 2️⃣ اعمل Cloudflare Worker (3 دقائق)
-```
-Workers & Pages → Create → Create Worker
-اسم: kary-mo
-Deploy
-```
+املأ النموذج ببيانات اختبار، واضغط **إرسال صورة الإعلان والتفاصيل إلى تيليجرام**، ثم تحقق من وصول الصورة والرسالة للبوت.
 
-### 3️⃣ رفع كود الـ Worker (2 دقائق)
-1. اضغط **Edit code**
-2. امسح الكود الموجود
-3. انسخ كل محتوى ملف `cloudflare-worker.js` من المشروع
-4. الصق الكود هنا
-5. اضغط **Deploy**
+## 🆘 لو الإرسال فشل
 
-### 4️⃣ اضف المتغيرات السرية (3 دقائق)
-اذهب: **Settings** → **Variables and Secrets**
-
-أضف التالي:
-
-```
-TELEGRAM_BOT_TOKEN = [Secret]
-القيمة: توكن البوت من BotFather
-
-TELEGRAM_CHAT_ID = [Secret]
-القيمة: رقم الشات (Chat ID)
-
-ALLOWED_ORIGIN = [Text]
-القيمة: https://mostafamaray056-arch.github.io
-```
-
-#### إزاي تجيب التوكن والـ Chat ID:
-**التوكن من BotFather:**
-1. اتكلم مع @BotFather على تليجرام
-2. ابعت `/newbot`
-3. اتبع التعليمات
-4. آخر رسالة فيها التوكن
-
-**Chat ID:**
-1. ابعت `/start` لبوتك
-2. افتح الرابط ده (ضع التوكن مكانه):
-```
-https://api.telegram.org/botTOKEN/getUpdates
-```
-3. شوف `"chat":{"id":123456789` — الرقم ده هو Chat ID
-
-### 5️⃣ نسخ رابط الـ Worker (1 دقيقة)
-في صفحة الـ Worker → شوف الرابط تحت "Deployment"
-```
-https://kary-mo.XXXXX.workers.dev
-```
-انسخ هذا الرابط.
-
-### 6️⃣ تحديث الموقع (1 دقيقة)
-افتح ملف: `site/index.html`
-
-ادور على السطر:
-```javascript
-const API_URL = 'https://kary-mo.REPLACE_WITH_YOUR_WORKER.workers.dev/api/telegram/order';
-```
-
-استبدل `REPLACE_WITH_YOUR_WORKER` برقم الـ Worker (من الخطوة 5)
-
-مثال:
-```javascript
-const API_URL = 'https://kary-mo.abc123xyz.workers.dev/api/telegram/order';
-```
-
-احفظ الملف.
-
-### 7️⃣ ارفع الملف على GitHub (1 دقيقة)
-ارفع `site/index.html` الجديد على GitHub Pages.
-
----
-
-## ✅ اختبار
-1. افتح الموقع
-2. اضغط "بيع وشراء قلاع"
-3. ملا البيانات
-4. اضغط "إرسال صورة الإعلان"
-5. تفقد تيليجرام ✅
-
----
-
-## 🆘 عندك مشكلة؟
-اقرأ ملف `TROUBLESHOOTING.md` للحلول الشاملة.
-
----
-
-## 📝 هذا هو الآن!
-✅ تم تعديل الملفات بنجاح
-✅ كل حاجة موجودة وجاهزة
-✅ اتبع الخطوات فوق وهتشتغل!
+راجع [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)، خصوصًا إعداد رابط Render ومتغيرات الخدمة.

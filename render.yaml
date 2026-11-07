@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: kary-mo-telegram-api-056-arch
+    runtime: node
+    plan: free
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://mostafamaray056-arch.github.io

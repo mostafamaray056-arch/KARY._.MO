@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KARY..MO™ | Legend Among Legends</title>
+<script src="runtime-config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -108,6 +109,8 @@
   .hero-portrait{display:block;width:116px;height:116px;object-fit:cover;object-position:center 28%;border:2px solid rgba(231,189,99,.75);border-radius:14px;background:linear-gradient(145deg,#29213b,#111d2a);box-shadow:0 0 18px rgba(231,189,99,.18)}
   .hero-moon-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .hero-moon-fields label{display:grid;gap:8px;color:var(--gold2);font-size:14px}
+  .hero-primary-choice{display:flex;align-items:center;gap:9px;color:var(--gold2);font-weight:800}
+  .hero-primary-choice input{width:18px;height:18px;accent-color:var(--gold)}
   .legion-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:12px 0}
   .legion-hero{min-width:0;padding:12px;border:1px solid rgba(245,197,66,.3);border-radius:13px;background:linear-gradient(145deg,rgba(49,31,76,.8),rgba(22,16,38,.85));text-align:center}
   .legion-hero img{display:block;width:min(100%,150px);aspect-ratio:1;height:auto;object-fit:cover;object-position:center 28%;margin:0 auto;border:2px solid rgba(231,189,99,.75);border-radius:12px}
@@ -150,6 +153,9 @@
   .tg:hover{transform:translateY(-3px);box-shadow:0 0 34px rgba(63,169,255,.9),0 0 18px rgba(245,197,66,.6)}
   .tg svg{width:26px;height:26px}
   footer{text-align:center;margin-top:40px;font-family:Georgia,serif;color:#9b86c9;font-size:13px;letter-spacing:2px}
+  .admin-entry{display:block;width:fit-content;margin:14px auto 0;padding:8px 14px;border:1px solid rgba(245,197,66,.45);border-radius:10px;color:#ffe9a3;text-decoration:none}
+  .admin-entry[hidden]{display:none}
+  .bot-welcome{white-space:pre-line;color:#ffe9a3;margin-bottom:16px;text-align:center;line-height:1.9}
   footer b{color:var(--gold)}
 
   .reveal{opacity:1;transform:none}
@@ -326,23 +332,248 @@
   @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{scroll-behavior:auto!important;transition:none!important}
   }
+
+  /* Royal parchment theme */
+  :root{
+    --gold:#ffd15c;
+    --gold2:#fff0c8;
+    --gold-dk:#9e6018;
+    --purple:#570d77;
+    --violet:#a43ad0;
+    --night:#18051f;
+    --night2:#310744;
+    --blue:#79e7f2;
+    --paper:#ffe6b4;
+    --paper-light:#fff0d2;
+    --ink:#351344;
+  }
+  body{
+    color:var(--gold2);
+    background:
+      radial-gradient(ellipse at 50% 2%,rgba(179,43,207,.54),transparent 42%),
+      radial-gradient(ellipse at 4% 52%,rgba(132,27,164,.48),transparent 35%),
+      radial-gradient(ellipse at 96% 64%,rgba(102,18,139,.45),transparent 36%),
+      radial-gradient(ellipse at 50% 100%,rgba(205,105,234,.26),transparent 42%),
+      linear-gradient(180deg,#25042f 0%,#3a0751 42%,#21042e 100%);
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.38;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%,#ffe8a6 99%,transparent),
+      radial-gradient(1px 1px at 81% 12%,#fff 99%,transparent),
+      radial-gradient(1px 1px at 67% 38%,#ffe8a6 99%,transparent),
+      radial-gradient(1px 1px at 24% 72%,#fff 99%,transparent),
+      radial-gradient(1px 1px at 91% 83%,#ffe8a6 99%,transparent);
+    background-size:190px 170px,230px 210px,270px 240px,210px 200px,300px 250px;
+  }
+  .wrap{max-width:860px;padding:26px 20px 46px}
+  .hero{
+    min-height:270px;max-width:820px;margin:0 auto 24px;padding:4px;overflow:hidden;
+    border-radius:24px;
+    background:linear-gradient(135deg,#fff1ad 0%,#bd7a22 18%,#4e126d 34%,#f8cb59 50%,#70128f 68%,#ffdc7a 86%,#8d5011);
+    box-shadow:0 12px 40px rgba(8,0,20,.55),0 0 44px rgba(207,66,235,.35);
+  }
+  .hero{
+    background:
+      linear-gradient(90deg,rgba(24,3,39,.2),rgba(22,3,35,.38) 46%,rgba(22,3,35,.06)),
+      linear-gradient(0deg,rgba(19,3,34,.5),transparent 58%),
+      url("kingdom-hero.jpg") center 58% / cover no-repeat,
+      linear-gradient(135deg,#fff1ad,#70128f 48%,#ffdc7a);
+    box-shadow:0 16px 42px rgba(8,0,20,.58),0 0 38px rgba(171,57,211,.25);
+  }
+  .hero::before{
+    content:"";position:absolute;inset:4px;border:1px solid rgba(255,230,151,.78);
+    border-radius:20px;pointer-events:none;z-index:2;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 86%,rgba(255,198,79,.22),transparent 43%);
+  }
+  .hero-castles{
+    position:absolute;inset:auto 0 0;width:100%;height:72%;opacity:.48;
+    fill:#13031b;filter:drop-shadow(0 0 12px rgba(255,200,76,.5));
+  }
+  .hero-castles{display:none}
+  .hero-copy{
+    position:relative;z-index:1;display:flex;min-height:262px;flex-direction:column;
+    justify-content:center;align-items:center;padding:24px 18px 48px;text-align:center;
+    background:radial-gradient(ellipse at 50% 48%,rgba(25,4,43,.62),rgba(25,4,43,.32) 48%,transparent 78%);
+    text-shadow:0 2px 12px rgba(13,1,25,.92);
+  }
+  .hero-kicker{
+    order:3;margin-top:8px;padding:4px 12px;border:1px solid rgba(255,210,92,.5);
+    border-radius:999px;background:rgba(38,5,52,.62);color:#ffe7a0;
+    font:700 11px Tahoma,Arial,sans-serif;letter-spacing:1px;
+  }
+  .hero-crown{width:88px;height:64px;margin:0 auto 2px;filter:drop-shadow(0 0 12px rgba(255,193,52,.62))}
+  .hero-copy h1{
+    font:900 clamp(27px,5vw,43px) 'Cairo',Tahoma,Arial,sans-serif;
+    color:#ffe895;letter-spacing:0;text-shadow:0 3px 0 #74258a,0 0 18px rgba(255,203,65,.4);
+    filter:none;background:none;-webkit-text-fill-color:initial;
+  }
+  .hero-copy p{margin-top:7px;color:#ffe8c8;font-size:clamp(14px,2.4vw,18px);line-height:1.8}
+  .hero-copy p b{color:#ffd35f}
+  .corner{z-index:3;width:40px;height:40px;border-color:#ffd15c;filter:drop-shadow(0 0 5px rgba(255,208,92,.55))}
+  .corner.tl{top:8px;left:8px}.corner.tr{top:8px;right:8px}
+  .corner.bl{bottom:8px;left:8px}.corner.br{bottom:8px;right:8px}
+  .grid{grid-template-columns:1fr;gap:18px;max-width:790px;margin:26px auto 0}
+  .card{
+    min-height:142px;padding:3px;border-radius:22px;
+    background:linear-gradient(135deg,#fff1b2 0%,#b87520 12%,#ffe28a 23%,#8c4316 38%,#f7cb56 55%,#6b217d 72%,#ffe49a 88%,#a55b17);
+    box-shadow:0 9px 22px rgba(9,0,18,.48),0 0 18px rgba(245,193,72,.18);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .card .in{
+    position:relative;isolation:isolate;min-height:136px;gap:18px;overflow:hidden;
+    padding:16px 18px;border:1px solid rgba(255,249,221,.8);border-radius:19px;
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(90deg,rgba(255,239,205,.97),rgba(255,229,178,.93) 58%,rgba(255,239,211,.98)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 120'%3E%3Cpath fill='%23b77948' fill-opacity='.15' d='M8 116V74h18V53h14V31h10V12h12v19h13v22h15v63h18V67h14V46h12V26h12V8h12v18h14v20h13v21h17v49z'/%3E%3C/svg%3E");
+    background-size:cover,auto 100%;background-position:center,left bottom;background-repeat:no-repeat;
+  }
+  .card .in::before{
+    z-index:1;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);
+  }
+  .card .in::after{
+    content:"";position:absolute;z-index:0;inset:7px;border:1px solid rgba(160,94,32,.38);
+    border-radius:13px;pointer-events:none;
+  }
+  .card:hover,.card:focus-visible{
+    transform:translateY(-3px);outline:3px solid rgba(121,231,242,.5);outline-offset:3px;
+    box-shadow:0 14px 28px rgba(8,0,18,.55),0 0 24px rgba(255,205,83,.32);
+  }
+  .card .ico{
+    position:relative;z-index:2;flex:0 0 78px;width:78px;height:78px;border:3px solid #ffd45e;
+    border-radius:18px;background:linear-gradient(145deg,#711292,#32064d 72%,#1d032d);
+    box-shadow:inset 0 0 0 2px rgba(255,240,191,.35),0 5px 12px rgba(53,10,57,.35);
+  }
+  .card .ico svg{width:42px;height:42px;filter:drop-shadow(0 2px 3px rgba(255,211,91,.38))}
+  .card .txt{position:relative;z-index:2;flex:1;text-align:right}
+  .card .txt h2{color:#4b155a;font:900 clamp(22px,3.8vw,30px) 'Cairo',Tahoma,Arial,sans-serif;text-shadow:none}
+  .card .txt p{margin-top:3px;color:#4d2a41;font-size:clamp(14px,2.3vw,18px);font-weight:700;line-height:1.6}
+  .card .arrow{position:relative;z-index:2;order:-1;flex:0 0 44px;margin:0;color:#52136c;font-size:36px;font-weight:900;opacity:1}
+  .lead-panel{
+    border:3px solid #d99a31;border-radius:24px;
+    background:linear-gradient(145deg,#45105b,#260532 72%,#4b125e);
+    box-shadow:0 12px 32px rgba(8,0,18,.45),inset 0 0 0 2px rgba(255,222,127,.35);
+  }
+  .lead-panel::before{inset:7px;border-color:rgba(255,220,117,.28);border-radius:16px}
+  .lead-title{color:#ffe5a0;font:900 27px 'Cairo',Tahoma,Arial,sans-serif}
+  .lead-card{border:1px solid rgba(255,224,153,.48);border-radius:16px;background:rgba(30,5,41,.78)}
+  .lead-ask{color:#fff0ce}
+  .lead-progress{color:#f2d8fa}
+  .lead-progress-track{background:rgba(255,255,255,.17)}
+  .lead-progress-fill{background:linear-gradient(90deg,#79e7f2,#ffd15c,#d962eb)}
+  .input,.textarea{
+    border:1px solid rgba(120,51,139,.42);background:#fff5e3;color:#351344;
+    box-shadow:inset 0 1px 3px rgba(65,24,57,.08);
+  }
+  .input:focus,.textarea:focus{outline:2px solid rgba(121,231,242,.82);outline-offset:1px}
+  .input::placeholder,.textarea::placeholder{color:#886f82}
+  .check-option,.hero-entry,.bot-plan{
+    border:1px solid rgba(219,169,74,.62);border-radius:14px;
+    background:linear-gradient(145deg,#fff0cf,#f2d9ab);color:#3a1943;
+  }
+  .check-option input{accent-color:#7c1d9a}
+  .hero-entry{box-shadow:0 6px 16px rgba(10,0,19,.18)}
+  .hero-moon-fields label{color:#51206a}
+  .hero-portrait,.legion-hero img{border-color:#d6a23f;background:#411052}
+  .legion-hero{border-color:rgba(218,169,74,.72);background:linear-gradient(145deg,#fff0cf,#edd4a1);color:#391946}
+  .legion-hero strong{color:#51136a}
+  .small-btn,.back-btn{
+    border:1px solid rgba(255,220,135,.62);background:linear-gradient(145deg,#63207c,#350847);
+    color:#fff0ce;
+  }
+  .option-btn{background:linear-gradient(135deg,#fff0c7,#e6bd68);color:#42134e}
+  .option-btn.selected{background:linear-gradient(135deg,#9e32c4,#5a1676);color:#fff}
+  .next-btn{
+    border:1px solid #ffe49a;background:linear-gradient(135deg,#8424a6,#4c0d68);
+    color:#fff0ce;box-shadow:0 4px 12px rgba(37,4,50,.34);
+  }
+  .summary{color:#fff0ce}
+  .summary strong{color:#ffdc76}
+  .summary-item{border-color:rgba(255,239,202,.2)}
+  .ad-image-preview{border-color:rgba(255,215,119,.5);background:rgba(26,3,38,.68)}
+  .ad-image-preview p,.bot-plan strong{color:#ffe5a0}
+  .bot-plan{color:#391946;box-shadow:0 8px 18px rgba(26,5,35,.18)}
+  .bot-plan .bot-bonus{color:#267b76}
+  .bot-contact{
+    border-color:rgba(36,143,128,.55);background:rgba(44,158,143,.13);color:#175b54;
+  }
+  .bot-contact:hover,.bot-contact:focus-visible{background:rgba(44,158,143,.24)}
+  .lead-note{color:#e2c7ee}
+  .tg{
+    border:2px solid #ffdc7c;border-radius:14px;
+    background:linear-gradient(145deg,#652084,#35064c);color:#fff0ce;
+    box-shadow:0 6px 18px rgba(12,0,22,.36),0 0 16px rgba(220,162,69,.22);
+  }
+  .tg:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(12,0,22,.45),0 0 20px rgba(121,231,242,.3)}
+  .admin-entry{border-color:rgba(255,220,124,.65);background:rgba(58,8,79,.72);color:#ffe8a8}
+  footer{color:#e2c7ee;letter-spacing:1px}
+  footer b{color:#ffd15c}
+  @media(max-width:640px){
+    .wrap{padding:18px 14px 34px}
+    .hero{min-height:238px;margin-bottom:20px;border-radius:20px;background-position:center,center,62% 54%,center}
+    .hero-copy{min-height:230px;padding:20px 14px 43px;background:radial-gradient(ellipse at 50% 48%,rgba(25,4,43,.7),rgba(25,4,43,.35) 55%,transparent 85%)}
+    .hero-castles{height:64%}
+    .hero-crown{width:74px;height:54px}
+    .hero-kicker{font-size:9px}
+    .grid{gap:14px;margin-top:22px}
+    .card{min-height:118px;border-radius:19px}
+    .card .in{min-height:112px;padding:13px 12px;gap:10px;border-radius:16px}
+    .card .ico{flex-basis:64px;width:64px;height:64px;border-radius:15px}
+    .card .ico svg{width:34px;height:34px}
+    .card .txt h2{font-size:21px}
+    .card .txt p{font-size:13px}
+    .card .arrow{flex-basis:30px;font-size:29px}
+    .lead-panel{padding:13px}
+    .lead-card{padding:14px}
+  }
+  @media(max-width:380px){
+    .card .in{gap:7px;padding-inline:9px}
+    .card .ico{flex-basis:56px;width:56px;height:56px}
+    .card .txt h2{font-size:19px}
+    .card .txt p{font-size:12px}
+    .card .arrow{flex-basis:24px;font-size:25px}
+  }
+  @media(min-width:820px){
+    .wrap{max-width:1120px;padding:34px 30px 54px}
+    .hero{max-width:1020px;min-height:300px;margin-bottom:30px}
+    .hero-copy{min-height:292px}
+    .hero-castles{height:78%}
+    .grid{
+      max-width:1000px;grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:20px;margin-top:30px
+    }
+    .card{min-height:144px}
+    .card .in{min-height:138px}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- الصورة الرئيسية -->
-  <div class="hero reveal">
+  <header class="hero reveal">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img src="hero.jpg" alt="KARY..MO Kingdom" fetchpriority="high" decoding="async">
-  </div>
-
-  <div class="divider reveal" style="animation-delay:.2s">
-    <span></span>
-    <svg viewBox="0 0 64 64" fill="none"><path d="M8 46 L12 18 L24 32 L32 12 L40 32 L52 18 L56 46 Z" fill="#f5c542" stroke="#a8741a" stroke-width="2"/><rect x="8" y="46" width="48" height="7" rx="2" fill="#f5c542" stroke="#a8741a" stroke-width="2"/><circle cx="32" cy="34" r="4" fill="#b06bff"/></svg>
-    <span></span>
-  </div>
-  <h1 class="reveal" style="animation-delay:.3s">اختار طريقك في المملكة</h1>
-  <p class="sub reveal" style="animation-delay:.4s">أهلاً بيك في مملكة <b>KARY..MO™</b> — إنت محتاج إيه؟</p>
+    <svg class="hero-castles" viewBox="0 0 900 190" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <path d="M0 190V111h31V69h20v42h17V88h25v102h23V74h22V36h14V12h11v24h19v38h21v116h31v-72h22V91h18V65h18V39h13V10h13v29h17v26h20v27h22v98h30V99h21V71h17V48h16V26h15V5h14v21h18v22h18v23h18v28h19v91h34V80h19V48h17V29h12V7h14v22h17v19h20v32h27v110h38v-68h24V92h21V67h20V41h15V21h13V5h13v16h16v20h19v26h20v25h28v98h32v-78h24V72h20V45h16V26h15V9h12v17h18v19h19v27h26v118Z"/>
+      <g fill="#ffd46a">
+        <path d="M130 105h8v13h-8zm72 38h8v13h-8zm150-92h9v14h-9zm56 66h9v14h-9zm136-62h9v15h-9zm68 52h9v14h-9zm148-58h9v15h-9zm67 65h9v14h-9z"/>
+      </g>
+    </svg>
+    <div class="hero-copy">
+      <span class="hero-kicker">KARY..MO™ · LEGEND AMONG LEGENDS</span>
+      <svg class="hero-crown" viewBox="0 0 100 72" aria-hidden="true">
+        <path d="M12 20 29 36 42 8 51 35 73 12 70 48H24z" fill="#ffd15c" stroke="#8f5413" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M24 50h48v10H24z" fill="#f4bd45" stroke="#8f5413" stroke-width="4"/>
+        <path d="m51 16 8 8-8 9-8-9z" fill="#8427bd" stroke="#ffe597" stroke-width="2"/>
+        <circle cx="29" cy="40" r="3" fill="#fff1b8"/><circle cx="70" cy="40" r="3" fill="#fff1b8"/>
+      </svg>
+      <h1>اختار طريقك في المملكة</h1>
+      <p>أهلاً بيك في مملكة <b>KARY..MO™</b> — إنت محتاج إيه؟</p>
+    </div>
+  </header>
 
   <!-- الاختيارات الأربعة -->
   <div class="grid">
@@ -384,24 +615,19 @@
     <div id="leadCard" class="lead-card"></div>
   </div>
 
-
+  <a id="adminEntry" class="admin-entry" href="admin.html" hidden>لوحة إدارة البوت</a>
   <footer>© <b>KARY..MO™</b> — LEGEND AMONG LEGENDS</footer>
 </div>
 
 <script>
   const WHATSAPP_PHONE = "201018351663";
   /* أرقام المتجر اللي بتظهر فوق في صورة الإعلان (تقدر تضيف رقم تاني) */
-  const STORE_PHONES = ['+201018351663'];
-  /* عنوان السيرفر اللي بيبعت لتليجرام.
-     لو الموقع شغال على سيرفر Node (server.js) سيبه زي ما هو.
-     لو الموقع على GitHub Pages حط هنا رابط الـ Cloudflare Worker، مثال:
-     'https://kary-mo.YOURNAME.workers.dev/api/telegram/order' */
-  /* ⚠️ غيّر الرابط ده لرابط Cloudflare Worker بتاعك
-     مثال: 'https://kary-mo.myname.workers.dev/api/telegram/order' */
-  // استخدام Telegram Bot API مباشرة
-  const TELEGRAM_BOT_TOKEN = '9096631294:AAEW_2g62fu-y-Y1coH-WApgA8xfXq7lwqo';
-  const TELEGRAM_CHAT_ID = '9096631294';
-  const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+  const STORE_PHONES = ['+201018351663', '+20 10 11358938'];
+  /* رابط API للإعدادات وطلبات الـ Mini App؛ إرسال إعلان القلعة له رابط مستقل. */
+  const API_URL = window.KARY_API_URL || '/api/telegram/order';
+  const AD_API_URL = window.KARY_AD_API_URL || API_URL;
+  const API_ROOT = API_URL.replace(/\/api\/telegram\/order\/?$/, '');
+  const apiUrl = (path) => `${API_ROOT}${path}`;
 
   const heroRosters = {
     infantry: ['قلاوون', 'ماوية', 'زينب', 'أرطغرل', 'محمد الثاني', 'عمر المختار'],
@@ -443,6 +669,7 @@
     'أورخان غازي': 'orhan.jpg',
     'زرقاء اليمامة': 'zarqa.jpg'
   };
+  const primaryAdHeroNames = ['صلاح الدين', 'برقوق', 'قطز', 'محمد الثاني', 'عمر المختار', 'كافور الإخشيدي', 'مالك بن الريب'];
   const questions = [
     { key: 'whatsapp', text: 'العرض 🦆', type: 'tel', placeholder: 'رقم واتساب بكود الدولة، مثال: +201012345678' },
     { key: 'links', text: 'اختار الروابط 🔗', type: 'multiselect', options: ['IGG', 'Google', 'Facebook', 'iPhone', 'Game Center', 'Device Binding'] },
@@ -460,14 +687,16 @@
     { key: 'medals', text: 'أوسمة ثلاثية أو نادرة 🎊', type: 'number', placeholder: 'من 1 إلى 50 وسامًا ثلاثيًا أو نادرًا', min: 1, max: 50, unit: ' وسام' },
     { key: 'power', text: 'التعويض ⚡', type: 'number', placeholder: 'قيمة التعويض من 10 إلى 5,000,000,000، الكسور مسموحة', min: 10, max: 5000000000, decimals: true, abbreviated: true },
     { key: 'reset', text: 'التصفير', type: 'number', placeholder: 'اكتب رقمًا أقل من التعويض', min: 0, decimals: true, abbreviated: true },
-    { key: 'equipment', text: 'عتاد القلعة: الألوان وعدد القطع', type: 'equipment', options: ['رمادي', 'أخضر', 'أزرق', 'بنفسجي', 'ذهبي', 'أحمر'] },
-    { key: 'price', text: 'السعر 👻', type: 'number', placeholder: 'من 10 إلى 20,000 دولار', min: 10, max: 20000, unit: ' دولار' }
+    { key: 'equipment', text: 'عتاد القلعة: الألوان وعدد القطع', type: 'equipment', options: ['رمادي', 'أخضر', 'أزرق', 'بنفسجي', 'ذهبي', 'أحمر'] }
   ];
 
   const leadPanel = document.getElementById('leadPanel');
   const leadCard = document.getElementById('leadCard');
   let currentStep = 0;
   let answers = {};
+  const defaultBotWelcomeText = '👋 منوّر يمزرعة متجر KAREY...MO 🌱💚\n✨ متنساش تدخل جروب التليجرام عشان يوصلك كل جديد!\n🤖 استمتع بالبوت، ونتمنالك تجربة ممتعة! 😊';
+  let botWelcomeText = defaultBotWelcomeText;
+  let publicConfigError = '';
   const botPlans = [
     { id: 'month', title: 'شهر واحد', duration: 'شهر', priceEgp: 320, priceUsd: 6 },
     { id: 'two-months', title: 'شهرين', duration: 'شهرين', priceEgp: 480, priceUsd: 9, detail: 'بسعر شهر ونصف' },
@@ -490,6 +719,38 @@
       if (question.showIfAll && !question.showIfAll.every(matchesCondition)) return false;
       return true;
     });
+  }
+
+  function applyPublicConfig(config) {
+    if (typeof config.welcomeText === 'string' && config.welcomeText.trim()) {
+      botWelcomeText = config.welcomeText;
+    }
+    if (Array.isArray(config.botPlans) && config.botPlans.length) {
+      botPlans.splice(0, botPlans.length, ...config.botPlans);
+    }
+    if (!config.questionOverrides || typeof config.questionOverrides !== 'object') return;
+    Object.entries(config.questionOverrides).forEach(([key, override]) => {
+      const question = questions.find((item) => item.key === key);
+      if (!question || !override || typeof override !== 'object') return;
+      if (typeof override.text === 'string' && override.text.trim()) question.text = override.text;
+      if (typeof override.placeholder === 'string') question.placeholder = override.placeholder;
+      if (Array.isArray(override.options) && override.options.length
+        && ['select', 'multiselect', 'equipment'].includes(question.type)) {
+        question.options = override.options;
+      }
+    });
+  }
+
+  async function loadPublicConfig() {
+    try {
+      const response = await fetch(apiUrl('/api/public/config'), { cache: 'no-store' });
+      if (!response.ok) throw new Error(`تعذر تحميل إعدادات المتجر (${response.status}).`);
+      applyPublicConfig(await response.json());
+      publicConfigError = '';
+    } catch (error) {
+      publicConfigError = error.message || 'تعذر تحميل تحديثات المتجر.';
+      console.error('Public store configuration could not be loaded:', error);
+    }
   }
 
   function canShowRedHilal() {
@@ -526,13 +787,19 @@
 
   function getAdvertisedHeroEntries() {
     return categories.flatMap((category) => (answers[`heroes_${category.key}`]?.entries || [])
-      .filter((entry) => Number(entry.normal) >= 3 || (canShowRedHilal() && Number(entry.red) > 0))
+      .filter((entry) => entry.name && (Number(entry.normal) >= 3 || (canShowRedHilal() && Number(entry.red) > 0)))
       .map((entry) => ({
         name: entry.name,
         normal: Number(entry.normal),
         red: canShowRedHilal() ? Number(entry.red || 0) : 0,
-        portrait: heroPortraits[entry.name]
+        portrait: heroPortraits[entry.name],
+        primary: Boolean(entry.primary)
       })));
+  }
+
+  function getSelectedPrimaryHeroCount() {
+    return categories.reduce((count, category) => count + (answers[`heroes_${category.key}`]?.entries || [])
+      .filter((entry) => entry.primary && primaryAdHeroNames.includes(entry.name)).length, 0);
   }
 
   function formatHeroEntry(entry) {
@@ -546,10 +813,12 @@
       if (question.type === 'heroes') {
         if (!legionAdded) {
           const heroes = getAdvertisedHeroEntries();
+          const primaryHeroes = heroes.filter((hero) => hero.primary);
+          const additionalHeroes = heroes.filter((hero) => !hero.primary).slice(0, 6);
           rows.push({
             label: 'الفيلق',
-            value: heroes.map(formatHeroEntry).join('، '),
-            heroes
+            value: `الأبطال الأساسيون: ${primaryHeroes.map(formatHeroEntry).join('، ')} | الأبطال الإضافيون: ${additionalHeroes.map(formatHeroEntry).join('، ') || 'لا يوجد'}`,
+            heroes: [...primaryHeroes, ...additionalHeroes]
           });
           legionAdded = true;
         }
@@ -573,15 +842,25 @@
   /* الرسالة اللي بتيجي تحت الصورة على تليجرام: التفاصيل اللي مش في الصورة */
   function buildTelegramLeadMessage() {
     const phone = answers.whatsapp || '';
+    const heroes = getAdvertisedHeroEntries();
+    const primaryHeroes = heroes.filter((hero) => hero.primary);
+    const additionalHeroes = heroes.filter((hero) => !hero.primary).slice(0, 6);
+    const storeContactLines = STORE_PHONES.map((storePhone) => {
+      const digits = storePhone.replace(/\D/g, '');
+      return `📞 ${storePhone}: https://wa.me/${digits}`;
+    });
     const lines = [
       '🏰 إعلان جديد — بيع قلعة',
       '━━━━━━━━━━━━',
       `🔢 رقم العرض: ${answers.offerNumber || '—'}`,
       `📱 واتساب صاحب الإعلان: \u2066${phone}\u2069`,
       phone ? `💬 كلّمه مباشرة: https://wa.me/${phone.replace(/\D/g, '')}` : '',
+      '📩 للاستفسار تواصل مع كارينا أو محمد:',
+      ...storeContactLines,
+      primaryHeroes.length ? `👑 الأبطال الأساسيون: ${primaryHeroes.map(formatHeroEntry).join('، ')}` : '',
+      additionalHeroes.length ? `✨ الأبطال الإضافيون: ${additionalHeroes.map(formatHeroEntry).join('، ')}` : '',
       `🔗 الروابط: ${adAnswer('links')}`,
-      `📦 الموارد: ${adAnswer('resources')}`,
-      `💰 السعر: ${adAnswer('price')}`
+      `📦 الموارد: ${adAnswer('resources')}`
     ];
     return lines.filter(Boolean).join('\n');
   }
@@ -610,6 +889,22 @@
     return image;
   }
 
+  async function loadHeroPortraitImage(portrait) {
+    try {
+      return await loadCanvasImage(new URL(`hero-portraits/${portrait}`, document.baseURI).href);
+    } catch {
+      return loadCanvasImage(new URL(portrait, document.baseURI).href);
+    }
+  }
+
+  function attachHeroPortraitFallbacks(container) {
+    container.querySelectorAll('[data-hero-portrait]').forEach((image) => {
+      image.addEventListener('error', () => {
+        image.src = new URL(image.dataset.heroPortrait, document.baseURI).href;
+      }, { once: true });
+    });
+  }
+
   function drawCoverImage(context, image, x, y, width, height, focalY = 0.5) {
     const targetRatio = width / height;
     const imageRatio = image.width / image.height;
@@ -630,7 +925,6 @@
 
   /* ====== صورة الإعلان اللي بتتبعت على تليجرام (بتترسم أوتوماتيك من بيانات الفورم) ====== */
   const AD_FONT = "'Cairo', Tahoma, Arial, sans-serif";
-
   function adRoundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -856,6 +1150,537 @@
   }
 
   async function createLeadImageCanvas() {
+    try { await Promise.all([document.fonts.load('800 24px Cairo'), document.fonts.load('900 32px Cairo')]); } catch {}
+
+    const scale = 1080 / 768;
+    const heroes = getAdvertisedHeroEntries();
+    const mainHeroes = heroes.filter((hero) => hero.primary).slice(0, 5);
+    const extraHeroes = heroes.filter((hero) => !hero.primary).slice(0, 6);
+    const mainFrameSources = Array.from({ length: 8 }, (_, index) => ({
+      x: index % 2 === 0 ? 216 : 25,
+      y: 425 + Math.floor(index / 2) * 88,
+      width: 187,
+      height: 82
+    }));
+    const extraFrameSources = Array.from({ length: 10 }, (_, index) => mainFrameSources[index % mainFrameSources.length]);
+    const [templateImage, kingdomTemplateImage, ...heroImages] = await Promise.all([
+      loadCanvasImage(new URL('castle-ad-template.jpg', document.baseURI).href),
+      loadCanvasImage(new URL('castle-ad-template-kingdom.png', document.baseURI).href),
+      ...heroes.map((entry) => entry.portrait
+        ? loadHeroPortraitImage(entry.portrait).catch(() => null)
+        : Promise.resolve(null))
+    ]);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1620;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    ctx.direction = 'rtl';
+    ctx.drawImage(templateImage, 0, 0, 768, 1152);
+
+    const sectionTitleHeight = 54;
+    const mainTitleY = 378;
+    const mainBodyY = mainTitleY + sectionTitleHeight;
+    const sectionBottomLimit = 1115;
+    const mainRows = Math.max(1, Math.ceil(mainHeroes.length / 2));
+    const extraRows = Math.max(1, Math.ceil(extraHeroes.length / 2));
+    const mainGap = 6;
+    const mainPadding = 10;
+    const extraGap = 6;
+    const extraPadding = 10;
+    const sectionSeparatorGap = 24;
+    const arrowSpace = 18;
+    const totalCardRows = mainRows + extraRows;
+    const totalSectionChrome = sectionTitleHeight * 2 + arrowSpace * 2 + sectionSeparatorGap
+      + mainPadding * 2 + (mainRows - 1) * mainGap
+      + extraPadding * 2 + (extraRows - 1) * extraGap;
+    const availableCardHeight = Math.max(0, sectionBottomLimit - mainTitleY - totalSectionChrome);
+    const cardHeight = Math.min(190, availableCardHeight / totalCardRows);
+    const mainSlotHeight = cardHeight;
+    const mainCardsY = mainBodyY + arrowSpace + mainPadding;
+    const mainBodyHeight = arrowSpace + mainPadding * 2 + mainRows * mainSlotHeight + (mainRows - 1) * mainGap;
+    const mainPanelBottom = mainBodyY + mainBodyHeight;
+    const extraTitleY = mainPanelBottom + sectionSeparatorGap;
+    const extraBodyY = extraTitleY + sectionTitleHeight;
+    const extraSlotHeight = cardHeight;
+    const extraCardsY = extraBodyY + arrowSpace + extraPadding;
+    const extraBodyHeight = arrowSpace + extraPadding * 2 + extraRows * extraSlotHeight + (extraRows - 1) * extraGap;
+
+    const sectionTexture = { x: 500, y: 970, width: 90, height: 46 };
+    const drawHeroSection = (titleY, titleSourceY, bodyY, bodyHeight) => {
+      if (bodyHeight <= 0) return;
+      if (titleSourceY !== null) {
+        ctx.drawImage(templateImage, 0, titleSourceY, 430, sectionTitleHeight, 0, titleY, 430, sectionTitleHeight);
+      }
+    };
+
+    const text = (value, x, y, maxWidth, size = 22, color = '#fff1c9', weight = 800, align = 'center') => {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.textAlign = align === 'ltr-right' ? 'right' : align === 'ltr' ? 'center' : align;
+      ctx.textBaseline = 'middle';
+      ctx.direction = align === 'ltr' || align === 'ltr-right' ? 'ltr' : 'rtl';
+      const fontSize = adFitText(ctx, String(value), maxWidth, size, weight);
+      ctx.font = `${weight} ${fontSize}px ${AD_FONT}`;
+      ctx.fillText(String(value), x, y, maxWidth);
+      ctx.restore();
+    };
+
+    const drawHeroArrow = (x, y) => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#241039';
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = adGoldGradient(ctx, x - 7, y - 7, 14, 14);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x - 3, y - 1);
+      ctx.lineTo(x, y + 2);
+      ctx.lineTo(x + 3, y - 1);
+      ctx.moveTo(x, y - 3);
+      ctx.lineTo(x, y + 2);
+      ctx.strokeStyle = '#ffe9a3';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+    };
+
+    const drawHeroBackdrop = (fromY, toY) => {
+      ctx.save();
+      adRoundRect(ctx, 22, fromY, 386, toY - fromY, 12);
+      ctx.clip();
+      ctx.drawImage(
+        templateImage,
+        sectionTexture.x, sectionTexture.y, sectionTexture.width, sectionTexture.height,
+        22, fromY, 386, toY - fromY
+      );
+      const edgeWidth = 8;
+      const edgeShade = ctx.createLinearGradient(22, 0, 22 + edgeWidth, 0);
+      edgeShade.addColorStop(0, 'rgba(20, 7, 36, 0.3)');
+      edgeShade.addColorStop(1, 'rgba(20, 7, 36, 0)');
+      ctx.fillStyle = edgeShade;
+      ctx.fillRect(22, fromY, edgeWidth, toY - fromY);
+
+      const rightEdgeShade = ctx.createLinearGradient(408 - edgeWidth, 0, 408, 0);
+      rightEdgeShade.addColorStop(0, 'rgba(20, 7, 36, 0)');
+      rightEdgeShade.addColorStop(1, 'rgba(20, 7, 36, 0.3)');
+      ctx.fillStyle = rightEdgeShade;
+      ctx.fillRect(408 - edgeWidth, fromY, edgeWidth, toY - fromY);
+      ctx.restore();
+    };
+    const clearHeroPanels = (fromY, toY) => {
+      drawHeroBackdrop(fromY, toY);
+    };
+    clearHeroPanels(mainTitleY, 1120);
+    drawHeroSection(mainTitleY, 376, mainBodyY, mainBodyHeight);
+    drawHeroArrow(215, mainBodyY + arrowSpace / 2);
+    if (extraRows) drawHeroSection(extraTitleY, null, extraBodyY, extraBodyHeight);
+    if (extraRows) {
+      const titlePlate = { x: 104, y: extraTitleY + 8, width: 222, height: 38 };
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(titlePlate.x + 10, titlePlate.y);
+      ctx.lineTo(titlePlate.x + titlePlate.width - 10, titlePlate.y);
+      ctx.lineTo(titlePlate.x + titlePlate.width, titlePlate.y + 8);
+      ctx.lineTo(titlePlate.x + titlePlate.width, titlePlate.y + titlePlate.height - 8);
+      ctx.lineTo(titlePlate.x + titlePlate.width - 10, titlePlate.y + titlePlate.height);
+      ctx.lineTo(titlePlate.x + 10, titlePlate.y + titlePlate.height);
+      ctx.lineTo(titlePlate.x, titlePlate.y + titlePlate.height - 8);
+      ctx.lineTo(titlePlate.x, titlePlate.y + 8);
+      ctx.closePath();
+      const plateFill = ctx.createLinearGradient(0, titlePlate.y, 0, titlePlate.y + titlePlate.height);
+      plateFill.addColorStop(0, '#42205f');
+      plateFill.addColorStop(0.5, '#251039');
+      plateFill.addColorStop(1, '#3b1b5b');
+      ctx.fillStyle = plateFill;
+      ctx.fill();
+      ctx.restore();
+      text('الأبطال الإضافيين', 215, extraTitleY + sectionTitleHeight / 2, 204, 24, '#ffe9a3', 900);
+      drawHeroArrow(215, extraBodyY + arrowSpace / 2);
+
+      const separatorY = mainPanelBottom + sectionSeparatorGap / 2;
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = adGoldGradient(ctx, 90, separatorY - 5, 250, 10);
+      ctx.shadowColor = 'rgba(255, 207, 61, 0.65)';
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.moveTo(92, separatorY);
+      ctx.lineTo(198, separatorY);
+      ctx.moveTo(232, separatorY);
+      ctx.lineTo(338, separatorY);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      adSparkle(ctx, 92, separatorY, 5);
+      adSparkle(ctx, 338, separatorY, 5);
+      ctx.beginPath();
+      ctx.arc(215, separatorY, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#241039';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = adGoldGradient(ctx, 203, separatorY - 12, 24, 24);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(210, separatorY - 3);
+      ctx.lineTo(215, separatorY + 2);
+      ctx.lineTo(220, separatorY - 3);
+      ctx.moveTo(215, separatorY - 4);
+      ctx.lineTo(215, separatorY + 4);
+      ctx.strokeStyle = '#ffe9a3';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    text('للتواصل مع كارينا أو محمد', 565, 88, 330, 20);
+    text('خبرة سنتين في التجارة — أسرع متجر لبيع القلاع', 565, 123, 330, 18);
+    text('إعلان بيع قلعة', 562, 205, 320, 23, '#ffe9a3', 900);
+
+    const storePhones = STORE_PHONES.length ? STORE_PHONES.slice(0, 2) : [`+${WHATSAPP_PHONE}`];
+    storePhones.forEach((phone, index) => {
+      const box = { x: 438, y: 240 + index * 27, width: 316, height: 24 };
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(box.x, box.y, box.width, box.height, 5);
+      ctx.fillStyle = 'rgba(32, 0, 55, 0.88)';
+      ctx.fill();
+      ctx.strokeStyle = '#f2cc71';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+      text(phone, 740, box.y + box.height / 2, 286, 19, '#fff1c9', 900, 'ltr-right');
+    });
+    text('KARY..MO', 196, 302, 260, 25, '#ffe9a3', 900, 'ltr');
+    text(`رقم العرض: ${answers.offerNumber || '—'}`, 196, 329, 260, 21, '#fff1c9', 900);
+    text(adAnswer('castle'), 662, 352, 106, 18, '#fff1c9', 900);
+
+    const description = [
+      `قوة القلعة: ${adAnswer('power')}  •  العلوم: ${adAnswer('science')}`,
+      `الاحتياط: ${adAnswer('reserve')}  •  الإشعال: ${adAnswer('ignition')}`,
+      `الروابط: ${adAnswer('links')}`
+    ];
+    description.forEach((line, index) => text(line, 590, 455 + index * 36, 270, 18, '#fff1c9', 800));
+
+    const detailRows = [
+      ['العلوم', 'science'],
+      ['القوة', 'power'],
+      ['شارات مجد', 'reset'],
+      ['الاحتياط', 'reserve'],
+      ['الأختام', 'seals'],
+      ['الذهب', 'gold'],
+      ['الأوسمة', 'medals'],
+      ['الإشعال', 'ignition']
+    ];
+    detailRows.forEach(([label, key], index) => {
+      text(`${label}: ${adAnswer(key)}`, 610, 600 + index * 48, 250, 18, '#fff1c9', 800);
+    });
+
+    const equipment = adAnswer('equipment');
+    text(`عتاد القلعة: ${equipment}`, 590, 1000, 270, 18);
+    text(`الحقيبة: ${adAnswer('bag')}  •  الموارد: ${adAnswer('resources')}`, 590, 1037, 270, 17);
+    text(`القنابل: ${adAnswer('bombs')}  •  الزرع: ${adAnswer('farming')}`, 590, 1074, 270, 17);
+
+    const drawHeroSlot = (hero, image, x, y, width, height, compact = false) => {
+      const dense = height < 68;
+      const inset = dense || compact ? 4 : 5;
+      const imageHeight = dense ? height - inset * 2 : Math.min(height - inset * 2, 100);
+      const imageWidth = dense
+        ? 44
+        : Math.min(compact ? 48 : 78, Math.round(imageHeight * 0.78));
+      const imageY = y + (height - imageHeight) / 2;
+      if (image) {
+        ctx.save();
+        adRoundRect(ctx, x + inset, imageY, imageWidth, imageHeight, 5);
+        ctx.clip();
+        drawCoverImage(ctx, image, x + inset, imageY, imageWidth, imageHeight, 0.28);
+        ctx.restore();
+      }
+
+      const infoX = x + imageWidth + inset + 3;
+      const infoWidth = width - imageWidth - inset * 2 - 5;
+      const nameSize = dense ? 14 : compact ? 11 : 17;
+      const nameY = y + height * 0.42;
+      const moonRadius = dense ? 4.5 : compact ? 3.5 : 6;
+      const moonGap = dense ? 10 : compact ? 8 : 13;
+      const moonCount = Math.min(5, hero.normal + hero.red);
+      const nameWidth = dense
+        ? Math.max(24, infoWidth - moonCount * moonGap - 4)
+        : infoWidth;
+      text(hero.name, infoX + infoWidth, nameY, nameWidth, nameSize, '#fff1c9', 800, 'right');
+
+      for (let i = 0; i < moonCount; i += 1) {
+        const color = i >= hero.normal ? '#ff4747' : '#ffcf3d';
+        const moonX = dense
+          ? infoX + moonRadius + i * moonGap
+          : infoX + infoWidth - moonRadius - i * moonGap;
+        adCrescent(ctx, moonX, y + height - (dense ? 9 : compact ? 12 : 14), moonRadius, color);
+      }
+    };
+
+    const drawHeroCardFrame = (source, x, y, width, height) => {
+      const edgeX = Math.min(16, source.width / 4, width / 4);
+      const edgeY = Math.min(14, source.height / 4, height / 4);
+      const sourceColumns = [source.x, source.x + edgeX, source.x + source.width - edgeX];
+      const sourceRows = [source.y, source.y + edgeY, source.y + source.height - edgeY];
+      const sourceWidths = [edgeX, source.width - edgeX * 2, edgeX];
+      const sourceHeights = [edgeY, source.height - edgeY * 2, edgeY];
+      const destColumns = [x, x + edgeX, x + width - edgeX];
+      const destRows = [y, y + edgeY, y + height - edgeY];
+      const destWidths = [edgeX, width - edgeX * 2, edgeX];
+      const destHeights = [edgeY, height - edgeY * 2, edgeY];
+
+      for (let row = 0; row < 3; row += 1) {
+        for (let column = 0; column < 3; column += 1) {
+          ctx.drawImage(
+            templateImage,
+            sourceColumns[column], sourceRows[row], sourceWidths[column], sourceHeights[row],
+            destColumns[column], destRows[row], destWidths[column], destHeights[row]
+          );
+        }
+      }
+    };
+
+    const drawHeroEmptyCard = (source, label, y, height, padding) => {
+      const width = 378;
+      const x = 25;
+      drawHeroCardFrame(source, x, y, width, height);
+      text(label, x + width / 2, y + height / 2, width - padding * 2, 20, '#ffe9a3', 900);
+    };
+
+    if (!mainHeroes.length) {
+      drawHeroEmptyCard(mainFrameSources[0], 'لا يوجد أبطال للقلعة', mainCardsY, mainSlotHeight, mainPadding);
+    }
+
+    mainHeroes.forEach((hero, index) => {
+      const row = Math.floor(index / 2);
+      const firstInRow = row * 2;
+      const heroesInRow = Math.min(2, mainHeroes.length - firstInRow);
+      const column = index % 2;
+      const source = mainFrameSources[index % mainFrameSources.length];
+      const width = heroesInRow === 1 ? 378 : source.width;
+      const height = mainSlotHeight;
+      const x = heroesInRow === 1 ? 25 : column === 0 ? 216 : 25;
+      const y = mainCardsY + row * (mainSlotHeight + mainGap);
+      drawHeroCardFrame(source, x, y, width, height);
+      drawHeroSlot(hero, heroImages[heroes.indexOf(hero)], x, y, width, height);
+    });
+
+    if (!extraHeroes.length) {
+      drawHeroEmptyCard(extraFrameSources[0], 'لا يوجد أبطال إضافيون', extraCardsY, extraSlotHeight, extraPadding);
+    }
+
+    extraHeroes.forEach((hero, index) => {
+      const row = Math.floor(index / 2);
+      const firstInRow = row * 2;
+      const heroesInRow = Math.min(2, extraHeroes.length - firstInRow);
+      const column = index % 2;
+      const source = extraFrameSources[index];
+      const width = heroesInRow === 1 ? 378 : source.width;
+      const height = extraSlotHeight;
+      const x = heroesInRow === 1 ? 25 : column === 0 ? 216 : 25;
+      const y = extraCardsY + row * (extraSlotHeight + extraGap);
+      drawHeroCardFrame(source, x, y, width, height);
+      drawHeroSlot(hero, heroImages[heroes.indexOf(hero)], x, y, width, height);
+    });
+
+    ctx.clearRect(0, 0, 768, 1152);
+    ctx.drawImage(kingdomTemplateImage, 0, 0, 768, 1152);
+
+    const drawReferenceText = (value, x, y, maxWidth, size = 22, color = '#fff1c9', weight = 800, align = 'center', direction = 'rtl') => {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.textBaseline = 'middle';
+      ctx.direction = direction;
+      const fontSize = adFitText(ctx, String(value), maxWidth, size, weight);
+      ctx.font = `${weight} ${fontSize}px ${AD_FONT}`;
+      ctx.fillText(String(value), x, y, maxWidth);
+      ctx.restore();
+    };
+
+    ctx.save();
+    adRoundRect(ctx, 466, 239, 238, 58, 8);
+    ctx.fillStyle = 'rgba(27, 3, 42, .97)';
+    ctx.fill();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#e7b84c';
+    ctx.stroke();
+    ctx.restore();
+
+    const phones = STORE_PHONES.length ? STORE_PHONES.slice(0, 2) : [`+${WHATSAPP_PHONE}`];
+    phones.forEach((phone, index) => {
+      drawReferenceText(phone, 585, 253 + index * 29, 215, 21, '#fff3c9', 900, 'center', 'ltr');
+    });
+    const descriptionRows = [
+      ['رقم العرض', answers.offerNumber || '—', 'ltr'],
+      ['واتساب البائع', answers.whatsapp || '—', 'ltr'],
+      ['مستوى القلعة', adAnswer('castle'), 'ltr'],
+      ['عدد الشارات', adAnswer('seals'), 'ltr']
+    ];
+    descriptionRows.forEach(([label, value, direction], index) => {
+      const y = 414 + index * 34;
+      if (index) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(111, 66, 34, .25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(478, y - 15);
+        ctx.lineTo(720, y - 15);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.save();
+      ctx.shadowColor = 'rgba(255, 247, 220, .9)';
+      ctx.shadowBlur = 3;
+      drawReferenceText(label, 730, y, 105, 19, '#351b10', 900, 'right');
+      drawReferenceText(value, 475, y, 150, 19, '#351b10', 900, 'left', direction);
+      ctx.restore();
+    });
+
+    const referenceRows = [
+      ['العلوم', 'science'],
+      ['القوة', 'power'],
+      ['شارات مجد', 'reset'],
+      ['الاحتياط', 'reserve'],
+      ['الأختام', 'seals'],
+      ['الذهب', 'gold'],
+      ['الأوسمة', 'medals'],
+      ['الإشعال', 'ignition']
+    ];
+    referenceRows.forEach(([label, key], index) => {
+      drawReferenceText(`${label}: ${adAnswer(key)}`, 730, 574 + index * 49, 243, 19, '#fff0c9', 800, 'right');
+    });
+
+    ctx.save();
+    adRoundRect(ctx, 492, 1008, 196, 34, 12);
+    const sloganPlate = ctx.createLinearGradient(492, 1008, 492, 1042);
+    sloganPlate.addColorStop(0, 'rgba(126, 28, 155, .96)');
+    sloganPlate.addColorStop(1, 'rgba(47, 5, 68, .98)');
+    ctx.fillStyle = sloganPlate;
+    ctx.fill();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#ffd66e';
+    ctx.shadowColor = 'rgba(255, 202, 74, .55)';
+    ctx.shadowBlur = 7;
+    ctx.stroke();
+    ctx.restore();
+    drawReferenceText('كارينا عمتك', 590, 1025, 180, 24, '#fff0a5', 900);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 213, 105, .68)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(485, 1049);
+    ctx.lineTo(695, 1049);
+    ctx.stroke();
+    ctx.restore();
+    drawReferenceText(`الحقيبة والموارد: ${adAnswer('bag')} / ${adAnswer('resources')}`, 590, 1067, 260, 17, '#fff4d8', 800);
+    drawReferenceText(`رقم العرض: ${answers.offerNumber || '—'}`, 590, 1092, 250, 17, '#ffe08a', 900);
+
+    const referenceMainHeroes = mainHeroes;
+    const referenceExtraHeroes = extraHeroes;
+    const mainHeroFrames = [
+      { x: 37, y: 409, width: 83, height: 145 },
+      { x: 130, y: 409, width: 83, height: 145 },
+      { x: 224, y: 409, width: 83, height: 145 },
+      { x: 317, y: 409, width: 83, height: 145 },
+      { x: 157, y: 558, width: 125, height: 122 }
+    ];
+    const extraHeroFrames = Array.from({ length: 6 }, (_, index) => ({
+      x: 39 + (index % 3) * 126,
+      y: 795 + Math.floor(index / 3) * 123,
+      width: 111,
+      height: 108
+    }));
+    const hideUnusedPrimaryFrame = (frame) => {
+      ctx.save();
+      adRoundRect(ctx, frame.x, frame.y, frame.width, frame.height, 9);
+      ctx.clip();
+      const fill = ctx.createLinearGradient(frame.x, frame.y, frame.x + frame.width, frame.y + frame.height);
+      fill.addColorStop(0, '#250535');
+      fill.addColorStop(0.5, '#4b0d70');
+      fill.addColorStop(1, '#1d032d');
+      ctx.fillStyle = fill;
+      ctx.fillRect(frame.x, frame.y, frame.width, frame.height);
+      const glow = ctx.createRadialGradient(
+        frame.x + frame.width / 2, frame.y + frame.height / 2, 2,
+        frame.x + frame.width / 2, frame.y + frame.height / 2, frame.width * 0.65
+      );
+      glow.addColorStop(0, 'rgba(177, 52, 220, .32)');
+      glow.addColorStop(1, 'rgba(177, 52, 220, 0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(frame.x, frame.y, frame.width, frame.height);
+      ctx.restore();
+    };
+    const drawReferenceHero = (hero, image, frame) => {
+      const { x, y, width, height } = frame;
+      const inset = 7;
+      const moonBandHeight = 24;
+      if (image) {
+        ctx.save();
+        adRoundRect(ctx, x + inset, y + inset, width - inset * 2, height - moonBandHeight - inset * 2, 5);
+        ctx.clip();
+        drawCoverImage(ctx, image, x + inset, y + inset, width - inset * 2, height - moonBandHeight - inset * 2, 0.3);
+        ctx.restore();
+      }
+      const bandX = x + inset;
+      const bandY = y + height - moonBandHeight - 2;
+      const bandWidth = width - inset * 2;
+      ctx.save();
+      adRoundRect(ctx, bandX, bandY, bandWidth, moonBandHeight - 2, 5);
+      const band = ctx.createLinearGradient(0, bandY, 0, bandY + moonBandHeight);
+      band.addColorStop(0, '#260438');
+      band.addColorStop(0.5, '#4b0d70');
+      band.addColorStop(1, '#21032f');
+      ctx.fillStyle = band;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 213, 105, .9)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+
+      const moonGap = Math.min(15, (bandWidth - 14) / 4);
+      const moonRadius = Math.min(7, moonGap * 0.45);
+      const moonStart = x + width / 2 - moonGap * 2;
+      for (let index = 0; index < 5; index += 1) {
+        const moonX = moonStart + index * moonGap;
+        const moonY = bandY + (moonBandHeight - 2) / 2;
+        const active = index < hero.normal + hero.red;
+        const color = !active ? 'rgba(255, 225, 160, .32)' : index >= hero.normal ? '#ff4a42' : '#ffd84e';
+        ctx.save();
+        ctx.shadowColor = color;
+        ctx.shadowBlur = active ? 7 : 0;
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(moonX + moonRadius * 0.48, moonY - moonRadius * 0.2, moonRadius * 0.82, 0, Math.PI * 2);
+        ctx.fillStyle = '#35104a';
+        ctx.fill();
+        ctx.restore();
+      }
+    };
+
+    referenceMainHeroes.forEach((hero, index) => {
+      drawReferenceHero(hero, heroImages[heroes.indexOf(hero)], mainHeroFrames[index]);
+    });
+    [
+      { x: 25, y: 558, width: 125, height: 122 },
+      { x: 289, y: 558, width: 125, height: 122 }
+    ].forEach(hideUnusedPrimaryFrame);
+    referenceExtraHeroes.forEach((hero, index) => {
+      drawReferenceHero(hero, heroImages[heroes.indexOf(hero)], extraHeroFrames[index]);
+    });
+
+    return canvas;
+  }
+
+  async function createLegacyLeadImageCanvas() {
     try { await Promise.all([document.fonts.load(`800 30px Cairo`), document.fonts.load(`900 34px Cairo`)]); } catch {}
 
     const W = 1366;
@@ -865,12 +1690,11 @@
     const rightX = 700, rightW = W - 42 - rightX;
     const panelTop = 196, titleH = 62;
     const n = Math.max(heroes.length, 1);
-    const cols = n <= 6 ? 3 : n <= 12 ? 4 : 5;
-    const stacked = cols > 3; // لو الأبطال كتير الأهلة بتنزل سطر تحت الاسم
-    const gapX = cols > 3 ? 18 : 26, gapY = 22;
+    const cols = 3;
+    const gapX = 26, gapY = 22;
     const tileW = Math.min(176, Math.floor((rightW - 40 - gapX * (cols - 1)) / cols));
     const frameH = Math.round(tileW * 1.2);
-    const tileH = frameH + (stacked ? 66 : 46);
+    const tileH = frameH + 46;
     const heroRows = Math.ceil(n / cols);
     const heroesNeeded = titleH + 30 + heroRows * tileH + (heroRows - 1) * gapY + 24;
 
@@ -880,11 +1704,18 @@
 
     const panelH = Math.max(heroesNeeded, specsNeeded, 540);
     const H = panelTop + panelH + 44;
+    const specsContentTop = panelTop + titleH + 22;
+    const specsContentBottom = panelTop + panelH - 18;
+    const extraCellH = Math.max(0, (
+      specsContentBottom - specsContentTop - 5 * cellGap - 5 * cellH - equipH
+    ) / 6);
+    const detailCellH = cellH + extraCellH;
+    const equipBoxH = equipH + extraCellH;
 
     const [brandImage, ...heroImages] = await Promise.all([
       loadCanvasImage(new URL('hero.jpg', document.baseURI).href).catch(() => null),
       ...heroes.map((entry) => entry.portrait
-        ? loadCanvasImage(new URL(`hero-portraits/${entry.portrait}`, document.baseURI).href).catch(() => null)
+        ? loadHeroPortraitImage(entry.portrait).catch(() => null)
         : Promise.resolve(null))
     ]);
 
@@ -924,7 +1755,7 @@
     adGem(ctx, W / 2, H - 13, 10);
 
     // ---- الشعار (صورة المملكة في دايرة) ----
-    const logoR = 74, logoX = 360, logoY = 100;
+    const logoR = 74, logoX = 112, logoY = 100;
     ctx.save();
     ctx.shadowColor = 'rgba(190,120,255,.8)';
     ctx.shadowBlur = 28;
@@ -940,29 +1771,40 @@
     if (brandImage) drawCoverImage(ctx, brandImage, logoX - logoR, logoY - logoR, logoR * 2, logoR * 2, 0.5);
     ctx.restore();
 
-    // ---- أرقام المتجر ----
+    // ---- تعريف المتجر ووسائل التواصل ----
     ctx.save();
-    ctx.textAlign = 'left';
+    const brandX = 205, brandY = 24, brandW = 480, brandH = 160;
+    adBox(ctx, brandX, brandY, brandW, brandH, 14);
+    ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.direction = 'rtl';
+    ctx.fillStyle = '#ffe9a3';
+    ctx.font = `900 ${adFitText(ctx, 'كارينا ومحمد', brandW - 28, 34, 900)}px ${AD_FONT}`;
+    ctx.fillText('كارينا ومحمد', brandX + brandW / 2, 45);
+    ctx.fillStyle = '#fff1c9';
+    [
+      { text: 'أصحاب أكبر جروب فيسبوك', y: 78 },
+      { text: 'خبرة سنتين في التجارة', y: 108 },
+      { text: 'أسرع متجر لبيع القلاع', y: 138 }
+    ].forEach(({ text, y }) => {
+      ctx.font = `800 ${adFitText(ctx, text, brandW - 32, 25, 800)}px ${AD_FONT}`;
+      ctx.fillText(text, brandX + brandW / 2, y);
+    });
     STORE_PHONES.slice(0, 2).forEach((phone, i) => {
-      const py = STORE_PHONES.length > 1 ? 78 + i * 46 : 100;
-      const icx = 468;
-      ctx.beginPath();
-      ctx.arc(icx, py, 17, 0, Math.PI * 2);
-      ctx.fillStyle = '#2a1545';
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#e2b04a';
-      ctx.stroke();
-      ctx.font = `18px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText('📞', icx, py + 1);
-      ctx.textAlign = 'left';
+      const phoneX = brandX + 10 + i * 230;
+      const phoneY = 157;
+      const phoneW = 220;
+      adBox(ctx, phoneX, phoneY, phoneW, 24, 10);
       ctx.direction = 'ltr';
+      ctx.textAlign = 'center';
       ctx.fillStyle = '#fff1c9';
-      ctx.font = `800 27px ${AD_FONT}`;
-      ctx.fillText(phone, icx + 26, py + 2);
-      ctx.direction = 'rtl';
+      let fontSize = 20;
+      ctx.font = `800 ${fontSize}px ${AD_FONT}`;
+      while (fontSize > 14 && ctx.measureText(phone).width > phoneW - 14) {
+        fontSize -= 1;
+        ctx.font = `800 ${fontSize}px ${AD_FONT}`;
+      }
+      ctx.fillText(phone, phoneX + phoneW / 2, phoneY + 13);
     });
     ctx.restore();
 
@@ -989,13 +1831,12 @@
     ];
     let cy = panelTop + titleH + 22;
     pairs.forEach(([rightText, leftText]) => {
-      adDetailCell(ctx, cx0 + cw + cellGap, cy, cw, cellH, rightText);
-      adDetailCell(ctx, cx0, cy, cw, cellH, leftText);
-      cy += cellH + cellGap;
+      adDetailCell(ctx, cx0 + cw + cellGap, cy, cw, detailCellH, rightText);
+      adDetailCell(ctx, cx0, cy, cw, detailCellH, leftText);
+      cy += detailCellH + cellGap;
     });
-    adDetailCell(ctx, cx0, cy, leftW - 40, cellH, `رقم العرض: ${answers.offerNumber || '—'}`, 28);
-    cy += cellH + cellGap;
-    const equipBoxH = Math.max(equipH, panelTop + panelH - 18 - cy);
+    adDetailCell(ctx, cx0, cy, leftW - 40, detailCellH, `رقم العرض: ${answers.offerNumber || '—'}`, 28);
+    cy += detailCellH + cellGap;
     adBox(ctx, cx0, cy, leftW - 40, equipBoxH, 12);
     adSparkle(ctx, cx0 + 18, cy + 18, 9);
     adSparkle(ctx, cx0 + leftW - 58, cy + 18, 9);
@@ -1040,27 +1881,18 @@
       // الاسم + الأهلة
       ctx.save();
       ctx.textBaseline = 'middle';
-      const moonR = stacked ? 7 : 8, moonGap = stacked ? 15 : 17;
+      const moonR = 8, moonGap = 17;
       const moons = [...Array(hero.normal).fill('#ffcf3d'), ...Array(hero.red).fill('#ff3b3b')];
       const moonsW = moons.length * moonGap;
       ctx.fillStyle = '#fff1c9';
       const ny = ty + frameH + 26;
-      if (stacked) {
-        const nameSize = adFitText(ctx, hero.name, tileW + gapX - 6, 21, 800);
-        ctx.font = `800 ${nameSize}px ${AD_FONT}`;
-        ctx.textAlign = 'center';
-        ctx.fillText(hero.name, tx + tileW / 2, ny);
-        const mStart = tx + tileW / 2 + moonsW / 2 - moonGap / 2;
-        moons.forEach((color, i) => adCrescent(ctx, mStart - i * moonGap, ny + 25, moonR, color));
-      } else {
-        const nameSize = adFitText(ctx, hero.name, tileW + gapX - moonsW - 10, 22, 800);
-        ctx.font = `800 ${nameSize}px ${AD_FONT}`;
-        const nameW = ctx.measureText(hero.name).width;
-        const right = tx + tileW / 2 + (nameW + 8 + moonsW) / 2;
-        ctx.textAlign = 'right';
-        ctx.fillText(hero.name, right, ny);
-        moons.forEach((color, i) => adCrescent(ctx, right - nameW - 8 - moonGap / 2 - i * moonGap, ny, moonR, color));
-      }
+      const nameSize = adFitText(ctx, hero.name, tileW + gapX - moonsW - 10, 22, 800);
+      ctx.font = `800 ${nameSize}px ${AD_FONT}`;
+      const nameW = ctx.measureText(hero.name).width;
+      const right = tx + tileW / 2 + (nameW + 8 + moonsW) / 2;
+      ctx.textAlign = 'right';
+      ctx.fillText(hero.name, right, ny);
+      moons.forEach((color, i) => adCrescent(ctx, right - nameW - 8 - moonGap / 2 - i * moonGap, ny, moonR, color));
       ctx.restore();
     });
 
@@ -1088,23 +1920,25 @@
       for (let offset = 0; offset < bytes.length; offset += 0x8000) {
         binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
       }
-      const formData = new FormData();
-      formData.append('chat_id', TELEGRAM_CHAT_ID);
-      formData.append('photo', image);
-      formData.append('caption', '🏰 عرض بيع قلعة جديد');
-      const response = await fetch(`${TELEGRAM_API}/sendPhoto`, {
+      const photo = `data:${image.type};base64,${btoa(binary)}`;
+      const response = await fetch(AD_API_URL, {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: buildTelegramLeadMessage(), photo })
       });
-      const result = { ok: response.ok };
-      if (result.ok) {
-        const msgResponse = await fetch(`${TELEGRAM_API}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: buildTelegramLeadMessage(), parse_mode: 'HTML' })
-        });
-        if (!msgResponse.ok) throw new Error('تعذر إرسال التفاصيل.');
+      const responseText = await response.text();
+      let result = {};
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText);
+        } catch {
+          if (response.status === 404) {
+            throw new Error('مسار إرسال الإعلان غير موجود على Worker (404). لازم نشر كود cloudflare-worker.js على Worker المرتبط بالرابط.');
+          }
+          if (response.ok) throw new Error('استجابة خدمة إرسال الإعلان غير صالحة.');
+        }
       }
+      if (!response.ok || !result.ok) throw new Error(result.error || `تعذر إرسال الإعلان (HTTP ${response.status}).`);
       button.textContent = 'تم إرسال الصورة والتفاصيل ✓';
       status.textContent = 'وصلت صورة الإعلان والتفاصيل بنجاح إلى تيليجرام.';
     } catch (error) {
@@ -1119,7 +1953,7 @@
     const entries = state.entries.map((entry, index) => {
       const selectedHero = entry.name
         ? `<div class="hero-info">
-            <img class="hero-portrait" src="hero-portraits/${escapeHTML(heroPortraits[entry.name])}" alt="صورة البطل ${escapeHTML(entry.name)}">
+            <img class="hero-portrait" data-hero-portrait="${escapeHTML(heroPortraits[entry.name])}" src="hero-portraits/${escapeHTML(heroPortraits[entry.name])}" alt="صورة البطل ${escapeHTML(entry.name)}">
             <div class="hero-moon-fields">
               <label>⭐⭐⭐⭐⭐ مؤشر القوة 5 نجوم
                 <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="normal" value="${escapeHTML(entry.normal ?? '')}" placeholder="عدد الهلال الأصفر (0–5)" aria-label="عدد الهلال الأصفر">
@@ -1130,6 +1964,12 @@
             </div>
           </div>`
         : '<p class="lead-note">اختار البطل الأول عشان تظهر خانات الهلال.</p>';
+      const primaryChoice = entry.name && primaryAdHeroNames.includes(entry.name)
+        ? `<label class="hero-primary-choice">
+            <input type="checkbox" data-hero-field="primary" ${entry.primary ? 'checked' : ''} ${getSelectedPrimaryHeroCount() >= 5 && !entry.primary ? 'disabled' : ''}>
+            بطل أساسي في الإعلان
+          </label>`
+        : '';
       const options = heroRosters[q.category.key].map((name) => {
         const selectedElsewhere = state.entries.some((other, otherIndex) => otherIndex !== index && other.name === name);
         return `<option value="${escapeHTML(name)}" ${entry.name === name ? 'selected' : ''} ${selectedElsewhere ? 'disabled' : ''}>${escapeHTML(name)}</option>`;
@@ -1140,6 +1980,7 @@
             <option value="">اختار بطلًا من القائمة</option>${options}
           </select>
           ${selectedHero}
+          ${primaryChoice}
           <button class="small-btn" type="button" data-remove-hero="${index}">حذف البطل</button>
         </div>
       `;
@@ -1151,7 +1992,7 @@
         <button class="small-btn" type="button" data-add-hero ${state.entries.length >= heroRosters[q.category.key].length ? 'disabled' : ''}>إضافة بطل</button>
         <button class="small-btn" type="button" data-no-heroes>${isNone ? 'تم اختيار: لا يوجد' : 'لا يوجد أبطال من هذه الفئة'}</button>
       </div>
-      <p class="lead-note">${canShowRedHilal() ? 'اختار كل بطل مرة واحدة واكتب الهلال الأصفر والأحمر. لازم يكون في الفيلق 5 أبطال مؤهلين على الأقل.' : 'اختار كل بطل مرة واحدة واكتب عدد الهلال الأصفر. الهلال الأحمر متاح من مستوى قلعة 31، ولازم يكون في الفيلق 5 أبطال مؤهلين على الأقل.'}</p>
+      <p class="lead-note">الأبطال الأساسيون المحددون: ${getSelectedPrimaryHeroCount()}/5. ${canShowRedHilal() ? 'اكتب الهلال الأصفر والأحمر. ' : 'اكتب الهلال الأصفر؛ الهلال الأحمر متاح من مستوى قلعة 31. '}علّم 5 أبطال أساسيين من صلاح الدين وبرقوق وقطز ومحمد الثاني وعمر المختار وكافور الإخشيدي ومالك بن الريب. الباقي يُضاف كأبطال إضافيين (حتى 6 في الإعلان).</p>
     </div>`;
   }
 
@@ -1207,17 +2048,47 @@
 
   function renderBotPlans() {
     leadCard.innerHTML = `
+      <div class="bot-welcome">${escapeHTML(botWelcomeText)}</div>
       <div class="lead-ask">أسعار باقات البوتات:</div>
       <div class="bot-plans">${botPlans.map((plan) => `
         <div class="bot-plan">
-          <strong>${plan.title}</strong>
+          <strong>${escapeHTML(plan.title)}</strong>
           <span>${plan.priceEgp.toLocaleString('en-US')} جنيه أو ${plan.priceUsd} دولار</span>
-          ${plan.detail ? `<span class="bot-bonus">${plan.detail}</span>` : ''}
-          <a class="bot-contact" href="https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(`مرحبًا، أريد الاستفسار عن باقة ${plan.title} بسعر ${plan.priceEgp} جنيه أو ${plan.priceUsd} دولار.`)}" target="_blank" rel="noopener noreferrer">اسأل عن الباقة على واتساب</a>
+          ${plan.detail ? `<span class="bot-bonus">${escapeHTML(plan.detail)}</span>` : ''}
+          <button class="bot-contact" type="button" data-subscribe-plan="${escapeHTML(plan.id)}">اطلب الباقة على تيليجرام</button>
         </div>
       `).join('')}</div>
+      <p class="lead-note" data-subscription-status>${publicConfigError ? escapeHTML(publicConfigError) : 'طلب الاشتراك متاح من داخل البوت على تيليجرام.'}</p>
       <a class="bot-contact bot-contact-main" href="https://wa.me/${WHATSAPP_PHONE}" target="_blank" rel="noopener noreferrer">تواصل معنا على واتساب</a>
     `;
+    leadCard.querySelectorAll('[data-subscribe-plan]').forEach((button) => {
+      button.addEventListener('click', () => requestBotSubscription(button));
+    });
+  }
+
+  async function requestBotSubscription(button) {
+    const status = leadCard.querySelector('[data-subscription-status]');
+    const initData = window.Telegram?.WebApp?.initData;
+    if (!initData) {
+      status.textContent = 'افتح الموقع من داخل البوت على تيليجرام لإرسال طلب الاشتراك.';
+      return;
+    }
+
+    button.disabled = true;
+    status.textContent = 'جاري إرسال طلب الاشتراك...';
+    try {
+      const response = await fetch(apiUrl('/api/subscriptions'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Telegram-Init-Data': initData },
+        body: JSON.stringify({ planId: button.dataset.subscribePlan })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || 'تعذر إرسال طلب الاشتراك.');
+      status.textContent = `وصل طلبك للإدارة بنجاح. رقم الطلب: ${result.orderId}`;
+    } catch (error) {
+      button.disabled = false;
+      status.textContent = error.message || 'تعذر إرسال الطلب. حاول مرة أخرى.';
+    }
   }
 
   function reviewAnswers() {
@@ -1250,8 +2121,8 @@
           <strong>الفيلق (${heroes.length} أبطال):</strong>
           <div class="legion-summary">${heroes.map((entry) => `
             <div class="legion-hero">
-              <img src="hero-portraits/${escapeHTML(entry.portrait)}" alt="صورة البطل ${escapeHTML(entry.name)}">
-              <strong>${escapeHTML(entry.name)}</strong>
+              <img data-hero-portrait="${escapeHTML(entry.portrait)}" src="hero-portraits/${escapeHTML(entry.portrait)}" alt="صورة البطل ${escapeHTML(entry.name)}">
+              <strong>${entry.primary ? 'أساسي: ' : 'إضافي: '}${escapeHTML(entry.name)}</strong>
               <span>${renderMoonRow(entry.normal, entry.red)}</span>
             </div>
           `).join('')}</div>
@@ -1275,6 +2146,7 @@
         </div>
         <button class="small-btn" type="button" data-restart-lead>بدء من جديد</button>
       `;
+      attachHeroPortraitFallbacks(leadCard);
       const preview = leadCard.querySelector('[data-ad-preview]');
       const sendButton = leadCard.querySelector('[data-send-lead]');
       const sendStatus = leadCard.querySelector('[data-send-status]');
@@ -1334,6 +2206,7 @@
     content += `<div class="action-row">${isFirst ? '<div></div>' : '<button class="back-btn" onclick="goBack()">رجوع</button>'}<button class="next-btn" onclick="nextStep()">${isLast ? 'مراجعة البيانات' : 'التالي'}</button></div><p class="lead-note">${note}</p>`;
 
     leadCard.innerHTML = content;
+    attachHeroPortraitFallbacks(leadCard);
 
     leadCard.querySelectorAll('[data-multi-option]').forEach((checkbox) => {
       checkbox.addEventListener('change', () => {
@@ -1362,7 +2235,10 @@
         const index = Number(row.dataset.heroIndex);
         const entries = answers[q.key]?.entries || [];
         const entry = entries[index] || {};
-        row.querySelectorAll('[data-hero-field]').forEach((input) => { entry[input.dataset.heroField] = input.value; });
+        row.querySelectorAll('[data-hero-field]').forEach((input) => {
+          entry[input.dataset.heroField] = input.type === 'checkbox' ? input.checked : input.value;
+        });
+        if (!primaryAdHeroNames.includes(entry.name)) entry.primary = false;
         entries[index] = entry;
         answers[q.key] = { none: false, entries };
       };
@@ -1370,7 +2246,7 @@
         input.addEventListener('input', () => saveHeroEntry(input.closest('.hero-entry')));
         input.addEventListener('change', () => {
           saveHeroEntry(input.closest('.hero-entry'));
-          if (input.dataset.heroField === 'name') renderCurrentStep();
+          if (input.dataset.heroField === 'name' || input.dataset.heroField === 'primary') renderCurrentStep();
         });
       });
       leadCard.querySelector('[data-add-hero]').addEventListener('click', () => {
@@ -1481,6 +2357,16 @@
         alert('للعرض، اختر أبطال فئة 5 نجوم ولديهم 3 هلال أصفر على الأقل أو هلال أحمر.');
         return;
       }
+      if (q.category.key === categories[categories.length - 1].key
+        && getSelectedPrimaryHeroCount() !== 5) {
+        alert(`علّم 5 أبطال أساسيين بالضبط من القائمة المحددة. المحدد حاليًا: ${getSelectedPrimaryHeroCount()}.`);
+        return;
+      }
+      if (q.category.key === categories[categories.length - 1].key
+        && getAdvertisedHeroEntries().filter((entry) => !entry.primary).length > 6) {
+        alert('الإعلان يستوعب 6 أبطال إضافيين فقط. احذف أبطالًا إضافيين قبل المتابعة.');
+        return;
+      }
     }
 
     if (q.type === 'equipment') {
@@ -1555,6 +2441,22 @@
 
   const tg = window.Telegram && window.Telegram.WebApp;
   if (tg && tg.initData) { tg.ready(); tg.expand(); }
+  const publicConfigPromise = loadPublicConfig();
+
+  async function initializeAdminEntry() {
+    if (!tg?.initData) return;
+    try {
+      const response = await fetch(apiUrl('/api/admin/auth'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Telegram-Init-Data': tg.initData },
+        body: '{}'
+      });
+      if (response.ok) document.getElementById('adminEntry').hidden = false;
+    } catch (error) {
+      console.error('Administrator access could not be checked:', error);
+    }
+  }
+  void initializeAdminEntry();
 
   document.querySelectorAll(".card").forEach((c) => {
     c.addEventListener("click", () => {
@@ -1563,11 +2465,11 @@
         return;
       }
       if (c.dataset.start === 'castles') {
-        showLeadFlow();
+        void publicConfigPromise.then(showLeadFlow);
         return;
       }
       if (c.dataset.start === 'bots') {
-        showBotFlow();
+        void publicConfigPromise.then(showBotFlow);
       }
     });
   });

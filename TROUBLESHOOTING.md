@@ -1,44 +1,24 @@
 # 🔧 استكشاف الأخطاء والحلول
 
-## ❌ الإعلان ما بيتبعتش لتيليجرام
+## ❌ إعلان GitHub Pages لا يصل إلى تيليجرام
 
-### 1. تفقد الـ Console
-1. افتح الموقع
-2. اضغط `F12` (أو `Ctrl+Shift+I`)
-3. اختر تبويب **Console**
-4. جرب إرسال إعلان وشوف الأخطاء
+1. افتح `site/runtime-config.js` وتأكد أن `window.KARY_AD_API_URL` يشير إلى عنوان خدمة Render الصحيح وينتهي بـ `/api/telegram/order`.
+2. افتح عنوان الخدمة مع `/health`؛ يجب أن يعيد `{"ok":true}`. مثال: `https://kary-mo-telegram-api-056-arch.onrender.com/health`.
+3. في Render تأكد أن `TELEGRAM_BOT_TOKEN` و`TELEGRAM_CHAT_ID` مضبوطان كـ Secrets، وأن `ALLOWED_ORIGINS` يساوي `https://mostafamaray056-arch.github.io`.
+4. إذا ظهر خطأ CORS، تحقق من قيمة `ALLOWED_ORIGINS` حرفيًا، ثم أعد نشر خدمة Render.
+5. تأكد أن GitHub Pages نُشرت بآخر نسخة من `site/runtime-config.js`. لا يكفي تعديل ملف محلي.
+6. بعد فترة خمول قد تحتاج الخدمة المجانية وقتًا للاستيقاظ؛ انتظر ثم أعد المحاولة.
 
-### 2. تحقق من رابط الـ Worker
-في `site/index.html` تأكد من:
-```javascript
-const API_URL = 'https://kary-mo.YOURNAME.workers.dev/api/telegram/order';
-```
-- استبدل `YOURNAME` برقم الـ Worker الفعلي
-- مثال الصيغة الصحيحة: `https://kary-mo.abc123.workers.dev/api/telegram/order`
+ملف `.env` يعمل محليًا فقط ولا يصل إلى Render أو GitHub Pages. لا تضع التوكن في `site/` ولا تشاركه. لا تختبر الإرسال ببيانات إعلان حقيقية إذا كنت تريد اختبارًا فقط.
 
-### 3. تحقق من إعدادات Cloudflare Worker
+### الأخطاء الشائعة
 
-#### Variables المطلوبة:
-اذهب لـ Worker بتاعك → **Settings** → **Variables and Secrets**
-
-✅ تأكد من وجود كل هذه:
-- `TELEGRAM_BOT_TOKEN` (Secret) — من BotFather
-- `TELEGRAM_CHAT_ID` (Secret) — رقم الشات
-- `ALLOWED_ORIGIN` (Text) — `https://mostafamaray056-arch.github.io`
-
-#### الأخطاء الشائعة:
-| الخطأ | الحل |
+| الخطأ | السبب المحتمل والحل |
 |---|---|
-| "Request origin is not allowed" | تحقق من `ALLOWED_ORIGIN` يساوي رابط الموقع بتاعك |
-| "استقبال الطلبات غير جاهز" | التوكن أو Chat ID ناقص في الـ Worker Settings |
-| "توكن غلط" | انسخ التوكن من BotFather ثاني، ممكن فيه مسافات زيادة |
-
-### 4. اختبر التوكن والـ Chat ID
-افتح المتصفح وجرب الرابط ده (بعد ما تحط التوكن):
-```
-https://api.telegram.org/botTOKEN/getMe
-```
-لو ما ردش، التوكن غلط.
+| `Failed to fetch` أو CORS | رابط API غير صحيح أو `ALLOWED_ORIGINS` لا يطابق أصل GitHub Pages. |
+| `404` | عنوان الخدمة أو المسار `/api/telegram/order` غير صحيح، أو لم يكتمل النشر. |
+| `استقبال الطلبات غير جاهز` | متغير Telegram السري ناقص في Render. |
+| تأخر أول طلب | الخدمة المجانية كانت في وضع السكون؛ انتظر استيقاظها ثم أعد المحاولة. |
 
 ---
 
@@ -48,7 +28,7 @@ https://api.telegram.org/botTOKEN/getMe
 
 تأكد من:
 1. صورة `hero.jpg` موجودة في مجلد `site/`
-2. صور الأبطال موجودة في `site/hero-portraits/`
+2. صور الأبطال موجودة في `site/hero-portraits/` أو بجوار `index.html` في جذر الموقع
    - مثال: `site/hero-portraits/qalawun.jpg`
 
 ### إذا الصور ناقصة:
@@ -59,21 +39,10 @@ https://api.telegram.org/botTOKEN/getMe
 
 ## ❌ خطأ CORS (Cross-Origin)
 
-### المشكلة:
-```
-Access to XMLHttpRequest at 'https://...' from origin 'https://mostafamaray056-arch.github.io' 
-has been blocked by CORS policy
-```
+تأكد أن متغير Render `ALLOWED_ORIGINS` يساوي أصل GitHub Pages بالضبط:
+`https://mostafamaray056-arch.github.io`
 
-### الحل:
-اذهب لـ Cloudflare Worker → **Settings** → **Variables and Secrets**
-
-تأكد من:
-```
-ALLOWED_ORIGIN = https://mostafamaray056-arch.github.io
-```
-
-لو الموقع عندك على رابط تاني، غيّر الـ `ALLOWED_ORIGIN` لراقط الموقع الفعلي.
+بعد التعديل أعد نشر خدمة Render. لا تضف مسار المستودع `KARY._.MO` إلى القيمة؛ المتصفح يرسل الأصل بدون مسار.
 
 ---
 
@@ -119,11 +88,11 @@ ALLOWED_ORIGIN = https://mostafamaray056-arch.github.io
 لو الإعلان ما بيتبعتش:
 
 - [ ] هل الموقع يشتغل على HTTPS؟ (مش HTTP)
-- [ ] هل البيانات موجودة في Cloudflare Worker Settings؟
+- [ ] هل خدمة Render تعمل ويستجيب `/health`؟
 - [ ] هل التوكن صحيح من BotFather؟
 - [ ] هل Chat ID صحيح؟
-- [ ] هل `ALLOWED_ORIGIN` يساوي رابط الموقع؟
+- [ ] هل `ALLOWED_ORIGINS` يساوي `https://mostafamaray056-arch.github.io`؟
 - [ ] هل كل الصور موجودة في المكان الصحيح؟
-- [ ] هل حدثت الموقع على GitHub Pages بآخر نسخة من `index.html`؟
+- [ ] هل حدثت الموقع على GitHub Pages بآخر نسخة من `runtime-config.js`؟
 
 ✅ إذا كل الحاجات تمام، جرب الإرسال من جديد!

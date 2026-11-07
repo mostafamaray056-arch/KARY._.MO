@@ -48,6 +48,31 @@ function sendJson(response, statusCode, payload) {
   response.end(JSON.stringify(payload));
 }
 
+function applyCorsHeaders(request, response) {
+  const origin = request.headers.origin;
+  if (!origin) return true;
+
+  let parsedOrigin;
+  try {
+    parsedOrigin = new URL(origin);
+  } catch {
+    return false;
+  }
+  if (parsedOrigin.origin !== origin) return false;
+
+  const allowedOrigins = new Set(
+    String(process.env.ALLOWED_ORIGINS || '')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean)
+  );
+  if (parsedOrigin.host !== request.headers.host && !allowedOrigins.has(origin)) return false;
+
+  response.setHeader('Access-Control-Allow-Origin', origin);
+  response.setHeader('Vary', 'Origin');
+  return true;
+}
+
 function checkRateLimit(address) {
   const now = Date.now();
   for (const [key, entry] of requestsByAddress) {
@@ -149,13 +174,6 @@ async function handleTelegramOrder(request, response) {
     return;
   }
 
-  const origin = request.headers.origin;
-  let originHost = null;
-  try { originHost = origin ? new URL(origin).host : null; } catch { originHost = 'invalid'; }
-  if (origin && originHost !== request.headers.host) {
-    sendJson(response, 403, { error: 'Request origin is not allowed.' });
-    return;
-  }
   if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
     sendJson(response, 415, { error: 'Content-Type must be application/json.' });
     return;
@@ -297,7 +315,40 @@ const server = createServer((request, response) => {
     return;
   }
 
+  if (url.pathname === '/health' && request.method === 'GET') {
+    sendJson(response, 200, { ok: true });
+    return;
+  }
+
   if (url.pathname === '/api/telegram/order') {
+    if (!applyCorsHeaders(request, response)) {
+      sendJson(response, 403, { error: 'Request origin is not allowed.' });
+      return;
+    }
+
+    if (request.method === 'OPTIONS') {
+      const requestedMethod = request.headers['access-control-request-method'];
+      const requestedHeaders = String(request.headers['access-control-request-headers'] || '')
+        .split(',')
+        .map((value) => value.trim().toLowerCase())
+        .filter(Boolean);
+      if ((requestedMethod && requestedMethod.toUpperCase() !== 'POST')
+        || requestedHeaders.some((header) => header !== 'content-type')) {
+        sendJson(response, 403, { error: 'Preflight request is not allowed.' });
+        return;
+      }
+
+      response.writeHead(204, {
+        'Allow': 'POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '600',
+        'Vary': 'Origin'
+      });
+      response.end();
+      return;
+    }
+
     handleTelegramOrder(request, response).catch((error) => {
       console.error('Unexpected Telegram endpoint error:', error.name);
       if (!response.headersSent) sendJson(response, 500, { error: 'حدث خطأ أثناء إرسال الطلب.' });
