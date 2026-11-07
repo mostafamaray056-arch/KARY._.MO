@@ -1906,8 +1906,35 @@
     });
   }
 
+  // يحوّل درجات البنفسجي إلى أزرق ليلي مع إبقاء الذهبي والأحمر وألوان الوجوه كما هي
+  function recolorCanvasToNavy(canvas) {
+    const ctx = canvas.getContext('2d');
+    const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const px = image.data;
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i] / 255, g = px[i + 1] / 255, b = px[i + 2] / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+      if (d < 0.06 || max === 0) continue;
+      let h;
+      if (max === r) h = ((g - b) / d + 6) % 6;
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60;
+      if (h < 245 || h > 335) continue;
+      const s = (d / max) * 0.8, v = max * 0.95;
+      const nh = (225 + (h - 290) * 0.25) / 60;
+      const c = v * s, x = c * (1 - Math.abs((nh % 2) - 1)), m = v - c;
+      const [nr, ng, nb] = nh < 4 ? [0, x, c] : [x, 0, c];
+      px[i] = (nr + m) * 255;
+      px[i + 1] = (ng + m) * 255;
+      px[i + 2] = (nb + m) * 255;
+    }
+    ctx.putImageData(image, 0, 0);
+    return canvas;
+  }
+
   async function buildLeadPhoto() {
-    const canvas = await createLeadImageCanvas();
+    const canvas = recolorCanvasToNavy(await createLeadImageCanvas());
     let blob;
     for (const quality of [0.92, 0.8, 0.7, 0.6]) {
       blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
