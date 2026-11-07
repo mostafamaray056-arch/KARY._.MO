@@ -26,12 +26,13 @@
 ### الخطوة 4️⃣: إضافة المتغيرات السرية
 1. روح **Settings** (في الـ Worker)
 2. اختر **Variables and Secrets**
-3. أضف ثلاث متغيرات:
+3. أضف المتغيرات التالية:
 
 | الاسم | النوع | القيمة |
 |---|---|---|
 | `TELEGRAM_BOT_TOKEN` | Secret | توكن البوت من BotFather |
 | `TELEGRAM_CHAT_ID` | Secret | رقم الشات بتاعك |
+| `ADMIN_TELEGRAM_ID` | Secret | User ID الشخصي للأدمن الذي يرسله @userinfobot |
 | `ALLOWED_ORIGIN` | Text | `https://mostafamaray056-arch.github.io` |
 
 #### إزاي تجيب التوكن والـ Chat ID:
@@ -53,12 +54,21 @@
 2. الرابط شكله: `https://kary-mo.xxxxxx.workers.dev`
 
 ### الخطوة 6️⃣: تحديث الموقع
-1. افتح ملف `site/index.html`
-2. ادور على السطر اللي فيه:
+1. افتح ملف `site/runtime-config.js`
+2. غيّر الرابط الموجود إلى رابط الـ Worker:
    ```javascript
-   const API_URL = 'https://kary-mo.REPLACE_WITH_YOUR_WORKER.workers.dev/api/telegram/order';
+   window.KARY_API_URL = 'https://kary-mo.REPLACE_WITH_YOUR_WORKER.workers.dev/api/telegram/order';
    ```
-3. غيّر `REPLACE_WITH_YOUR_WORKER` برقم الـ Worker بتاعك
+3. غيّر `REPLACE_WITH_YOUR_WORKER` برابط الـ Worker بتاعك، ثم ارفع محتويات `site/` كلها على GitHub Pages، بما فيها `admin.html` و`runtime-config.js`.
+
+### تفعيل لوحة الإدارة وطلبات الباقات
+1. أنشئ **KV namespace** في Cloudflare، ثم أضف binding باسم `APP_DATA` في إعدادات الـ Worker واربطه بالـ namespace. تُحفظ فيه الأسعار ورسالة الترحيب وأسئلة الفورم وطلبات الاشتراك.
+2. أضف `ADMIN_TELEGRAM_ID` كـ **Secret** في إعدادات الـ Worker. استخدم رقم User ID لحساب الأدمن من @userinfobot؛ ليس رقم الهاتف أو Bot ID أو توكن البوت.
+3. في تيليجرام افتح @BotFather → `/mybots` → اختر البوت → **Bot Settings → Menu Button → Configure menu button**. اربط زر القائمة برابط الموقع المنشور، مثل `https://mostafamaray056-arch.github.io/KARY._.MO/`.
+4. افتح الموقع من زر القائمة في تيليجرام. حساب الأدمن فقط سيظهر له رابط **لوحة إدارة البوت**. من `admin.html` يمكن تعديل الترحيب والباقات وأسئلة فورم القلاع، ومراجعة طلبات الاشتراك بالموافقة أو الرفض.
+5. طلبات الاشتراك تُحفظ في KV لمدة 90 يومًا وتصل كذلك إلى `TELEGRAM_CHAT_ID`.
+
+> طلب الاشتراك ولوحة الإدارة يحتاجان فتح الموقع من داخل البوت على تيليجرام؛ الرابط العادي في المتصفح لا يوفر بيانات هوية Telegram الموقعة.
    - مثال: `https://kary-mo.myname123.workers.dev/api/telegram/order`
 
 4. احفظ الملف

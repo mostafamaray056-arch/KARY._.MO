@@ -67,24 +67,10 @@ https://kary-mo.XXXXX.workers.dev
 انسخ هذا الرابط.
 
 ### 6️⃣ تحديث الموقع (1 دقيقة)
-افتح ملف: `site/index.html`
+افتح `site/runtime-config.js` وتأكد إن `window.KARY_API_URL` يحتوي على رابط الـ Worker وينتهي بـ `/api/telegram/order`.
 
-ادور على السطر:
-```javascript
-const API_URL = 'https://kary-mo.REPLACE_WITH_YOUR_WORKER.workers.dev/api/telegram/order';
-```
-
-استبدل `REPLACE_WITH_YOUR_WORKER` برقم الـ Worker (من الخطوة 5)
-
-مثال:
-```javascript
-const API_URL = 'https://kary-mo.abc123xyz.workers.dev/api/telegram/order';
-```
-
-احفظ الملف.
-
-### 7️⃣ ارفع الملف على GitHub (1 دقيقة)
-ارفع `site/index.html` الجديد على GitHub Pages.
+### 7️⃣ ارفع الموقع على GitHub (1 دقيقة)
+ارفع محتويات فولدر `site/` كلها على GitHub Pages، بما فيها `runtime-config.js`.
 
 ---
 

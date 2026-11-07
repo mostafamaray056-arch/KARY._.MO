@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>إدارة KARY..MO</title>
+  <script src="runtime-config.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{color-scheme:dark;--gold:#f5c542;--gold-light:#ffe9a3;--panel:#1b1030;--background:#0b0618;--text:#f7efff;--muted:#cbbce0}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at 50% 0,#321363,var(--background) 65%);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+    main{max-width:920px;margin:0 auto;padding:24px 16px 52px}
+    h1,h2{color:var(--gold-light)}
+    h1{text-align:center}
+    h2{margin-top:0}
+    section,.login{margin:18px 0;padding:20px;border:1px solid rgba(245,197,66,.42);border-radius:16px;background:var(--panel)}
+    label{display:block;margin:12px 0 6px;font-weight:700}
+    input,textarea{width:100%;padding:11px;border:1px solid #735c8e;border-radius:9px;background:#10091d;color:var(--text);font:inherit}
+    textarea{min-height:76px;resize:vertical}
+    button,.back{display:inline-flex;justify-content:center;align-items:center;margin:8px 6px 0 0;padding:10px 14px;border:1px solid rgba(245,197,66,.65);border-radius:10px;background:#382254;color:var(--gold-light);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+    button:disabled{opacity:.55;cursor:wait}
+    .primary{background:#684500}
+    .danger{border-color:#b85858;color:#ffd2d2}
+    .hint,.muted{color:var(--muted);line-height:1.7}
+    .status{min-height:24px;color:var(--gold-light)}
+    .row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.4fr auto;gap:8px;align-items:end;margin:12px 0;padding:12px;border:1px solid #554269;border-radius:10px}
+    .question-row{display:grid;grid-template-columns:1fr 1.3fr 1.5fr;gap:8px;padding:12px 0;border-bottom:1px solid #49365e}
+    .question-row input,.question-row textarea{margin-top:6px}
+    .question-key{direction:ltr;color:var(--muted);font-size:12px}
+    .order{margin:12px 0;padding:14px;border:1px solid #554269;border-radius:10px}
+    .order p{margin:7px 0}
+    .order-status{color:var(--gold-light)}
+    [hidden]{display:none!important}
+    @media(max-width:700px){main{padding:16px 10px 36px}.row,.question-row{grid-template-columns:1fr}.row button{width:100%}section,.login{padding:14px}}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>لوحة إدارة متجر KARY..MO</h1>
+    <a class="back" href="index.html">العودة للموقع</a>
+    <p id="pageStatus" class="status" role="status">نتحقق من حساب الأدمن على تيليجرام...</p>
+    <div id="loginHelp" class="login" hidden>
+      افتح لوحة الإدارة من داخل البوت على تيليجرام باستخدام حساب الأدمن المصرّح.
+    </div>
+    <div id="dashboard" hidden>
+      <section>
+        <h2>رسالة الترحيب للزبائن</h2>
+        <label for="welcomeText">النص الذي يظهر في قسم البوتات</label>
+        <textarea id="welcomeText" maxlength="1000"></textarea>
+      </section>
+
+      <section>
+        <h2>باقات البوتات وأسعارها</h2>
+        <div id="plans"></div>
+        <button id="addPlan" type="button">إضافة باقة</button>
+      </section>
+
+      <section>
+        <h2>أسئلة فورم بيع وشراء القلاع</h2>
+        <p class="hint">يمكنك تعديل نص السؤال والتوضيح والاختيارات. قواعد الأرقام ومستوى ظهور الهلال الأحمر تبقى محمية.</p>
+        <div id="questions"></div>
+      </section>
+
+      <button id="saveConfig" class="primary" type="button">حفظ كل التعديلات</button>
+      <p id="saveStatus" class="status" role="status"></p>
+
+      <section>
+        <h2>طلبات اشتراك البوت</h2>
+        <p class="hint">آخر 100 طلب محفوظ، وتُحذف الطلبات بعد 90 يومًا.</p>
+        <button id="refreshOrders" type="button">تحديث الطلبات</button>
+        <div id="orders"></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = window.KARY_API_URL || '/api/telegram/order';
+    const API_ROOT = API_URL.replace(/\/api\/telegram\/order\/?$/, '');
+    const apiUrl = (path) => `${API_ROOT}${path}`;
+    const initData = window.Telegram?.WebApp?.initData || '';
+    const optionKeys = new Set(['links', 'bag', 'resources', 'equipment']);
+    const questionFields = [
+      { key: 'whatsapp', text: 'العرض 🦆', placeholder: 'رقم واتساب بكود الدولة، مثال: +201012345678' },
+      { key: 'links', text: 'اختار الروابط 🔗', options: ['IGG', 'Google', 'Facebook', 'iPhone', 'Game Center', 'Device Binding'] },
+      { key: 'castle', text: 'مستوى القلعة 🏰', placeholder: 'اختر مستوى القلعة من القائمة' },
+      { key: 'science', text: 'العلوم 🔬', placeholder: 'من 1 إلى 225، الكسور مسموحة' },
+      { key: 'reserve', text: 'الاحتياط 🥋', placeholder: '0 أو من 1 إلى 79 مليون، ومن 80 إلى 1000 ألف' },
+      { key: 'seals', text: 'الأختام 🏆', placeholder: 'من 0 إلى 1000 ختم' },
+      { key: 'heroes_infantry', text: 'اختار أبطال المشاة أصحاب مؤشر القوة 5 نجوم ⚔️' },
+      { key: 'heroes_chariots', text: 'اختار أبطال العجلات أصحاب مؤشر القوة 5 نجوم 🛞' },
+      { key: 'heroes_cavalry', text: 'اختار أبطال الفرسان أصحاب مؤشر القوة 5 نجوم 🐎' },
+      { key: 'heroes_archers', text: 'اختار أبطال الرماة أصحاب مؤشر القوة 5 نجوم 🏹' },
+      { key: 'bag', text: 'الحقيبة 💕', options: ['كويسة', 'متوسطة', 'وحشة'] },
+      { key: 'resources', text: 'الموارد', options: ['كويسة', 'متوسطة', 'وحشة'] },
+      { key: 'gold', text: 'الذهب 🪙', placeholder: 'من 1 إلى 100,000,000، الكسور مسموحة' },
+      { key: 'bombs', text: 'القنابل 🎱', placeholder: 'من 0 إلى 10,000' },
+      { key: 'farming', text: 'الزرع 🌱', placeholder: 'من 0 إلى 10,000' },
+      { key: 'ignition', text: 'الإشعال 🔥', placeholder: 'من 500,000 إلى 100,000,000، الكسور مسموحة' },
+      { key: 'medals', text: 'أوسمة ثلاثية أو نادرة 🎊', placeholder: 'من 1 إلى 50 وسامًا ثلاثيًا أو نادرًا' },
+      { key: 'power', text: 'التعويض ⚡', placeholder: 'قيمة التعويض من 10 إلى 5,000,000,000، الكسور مسموحة' },
+      { key: 'reset', text: 'التصفير', placeholder: 'اكتب رقمًا أقل من التعويض' },
+      { key: 'equipment', text: 'عتاد القلعة: الألوان وعدد القطع', options: ['رمادي', 'أخضر', 'أزرق', 'بنفسجي', 'ذهبي', 'أحمر'] },
+      { key: 'price', text: 'السعر 👻', placeholder: 'من 10 إلى 20,000 دولار' }
+    ];
+    const defaultPlans = [
+      { id: 'month', title: 'شهر واحد', priceEgp: 320, priceUsd: 6, detail: '' },
+      { id: 'two-months', title: 'شهرين', priceEgp: 480, priceUsd: 9, detail: 'بسعر شهر ونصف' },
+      { id: 'three-months', title: '3 شهور + شهر هدية', priceEgp: 960, priceUsd: 18, detail: 'ادفع 3 شهور وخد شهر هدية' },
+      { id: 'six-months', title: '6 شهور + شهرين هدية', priceEgp: 1920, priceUsd: 36, detail: 'ادفع 6 شهور وخد شهرين هدية' }
+    ];
+    const pageStatus = document.getElementById('pageStatus');
+    const dashboard = document.getElementById('dashboard');
+    const saveStatus = document.getElementById('saveStatus');
+    let config;
+    let orders = [];
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+    }
+
+    async function api(path, options = {}) {
+      const response = await fetch(apiUrl(path), {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Telegram-Init-Data': initData,
+          ...options.headers
+        }
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'تعذر الاتصال بالسيرفر.');
+      return result;
+    }
+
+    function renderPlans() {
+      document.getElementById('plans').innerHTML = config.botPlans.map((plan, index) => `
+        <div class="row" data-plan-index="${index}">
+          <label>اسم الباقة<input data-plan-field="title" maxlength="100" value="${escapeHTML(plan.title)}"></label>
+          <label>الجنيه<input data-plan-field="priceEgp" type="number" min="0" step="1" value="${escapeHTML(plan.priceEgp)}"></label>
+          <label>الدولار<input data-plan-field="priceUsd" type="number" min="0" step="0.01" value="${escapeHTML(plan.priceUsd)}"></label>
+          <label>تفاصيل إضافية<input data-plan-field="detail" maxlength="240" value="${escapeHTML(plan.detail || '')}"></label>
+          <button class="danger" data-remove-plan="${index}" type="button">حذف الباقة</button>
+        </div>
+      `).join('');
+      document.querySelectorAll('[data-remove-plan]').forEach((button) => {
+        button.addEventListener('click', () => {
+          config.botPlans.splice(Number(button.dataset.removePlan), 1);
+          renderPlans();
+        });
+      });
+      document.querySelectorAll('[data-plan-field]').forEach((input) => {
+        input.addEventListener('input', () => {
+          const row = input.closest('[data-plan-index]');
+          const plan = config.botPlans[Number(row.dataset.planIndex)];
+          const field = input.dataset.planField;
+          plan[field] = field === 'priceEgp' || field === 'priceUsd' ? Number(input.value) : input.value;
+        });
+      });
+    }
+
+    function renderQuestions() {
+      document.getElementById('questions').innerHTML = questionFields.map((field) => {
+        const override = config.questionOverrides[field.key] || {};
+        const text = override.text ?? field.text;
+        const placeholder = override.placeholder ?? field.placeholder ?? '';
+        const options = override.options ?? field.options;
+        return `
+          <div class="question-row" data-question-key="${field.key}">
+            <label>السؤال <span class="question-key">${field.key}</span><input data-question-field="text" maxlength="300" value="${escapeHTML(text)}"></label>
+            <label>التوضيح<input data-question-field="placeholder" maxlength="300" value="${escapeHTML(placeholder)}"></label>
+            ${optionKeys.has(field.key)
+              ? `<label>الاختيارات (اختيار واحد في كل سطر)<textarea data-question-field="options">${escapeHTML((options || []).join('\n'))}</textarea></label>`
+              : '<span class="hint">خيارات هذا السؤال وقواعده ثابتة.</span>'}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function collectConfig() {
+      const questionOverrides = {};
+      document.querySelectorAll('[data-question-key]').forEach((row) => {
+        const override = {};
+        row.querySelectorAll('[data-question-field]').forEach((input) => {
+          if (input.dataset.questionField === 'options') {
+            const options = input.value.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+            if (options.length) override.options = options;
+          } else {
+            override[input.dataset.questionField] = input.value.trim();
+          }
+        });
+        questionOverrides[row.dataset.questionKey] = override;
+      });
+      return {
+        welcomeText: document.getElementById('welcomeText').value.trim(),
+        botPlans: config.botPlans,
+        questionOverrides
+      };
+    }
+
+    async function loadOrders() {
+      const container = document.getElementById('orders');
+      container.innerHTML = '<p class="hint">جاري تحميل الطلبات...</p>';
+      try {
+        const result = await api('/api/admin/subscriptions');
+        orders = result.orders;
+        container.innerHTML = orders.length ? orders.map((order) => `
+          <article class="order">
+            <p><strong>${escapeHTML(order.planTitle)}</strong> — ${escapeHTML(order.priceEgp)} جنيه / ${escapeHTML(order.priceUsd)} دولار</p>
+            <p>العميل: ${escapeHTML(order.telegramUsername ? `@${order.telegramUsername}` : order.customerName || 'بدون اسم')}</p>
+            <p>Telegram ID: <bdi dir="ltr">${escapeHTML(order.telegramUserId)}</bdi></p>
+            <p>التاريخ: <bdi dir="ltr">${escapeHTML(new Date(order.createdAt).toLocaleString('ar-EG'))}</bdi></p>
+            <p class="order-status">الحالة: ${order.status === 'pending' ? 'قيد المراجعة' : order.status === 'approved' ? 'تمت الموافقة' : 'مرفوض'}</p>
+            ${order.status === 'pending' ? `
+              <button data-order-id="${escapeHTML(order.id)}" data-order-status="approved" type="button">موافقة</button>
+              <button class="danger" data-order-id="${escapeHTML(order.id)}" data-order-status="rejected" type="button">رفض</button>
+            ` : ''}
+          </article>
+        `).join('') : '<p class="hint">لا توجد طلبات اشتراك حتى الآن.</p>';
+        container.querySelectorAll('[data-order-id]').forEach((button) => {
+          button.addEventListener('click', async () => {
+            button.disabled = true;
+            try {
+              await api(`/api/admin/subscriptions/${button.dataset.orderId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ status: button.dataset.orderStatus })
+              });
+              await loadOrders();
+            } catch (error) {
+              button.disabled = false;
+              saveStatus.textContent = error.message;
+            }
+          });
+        });
+        if (result.hasMore) container.insertAdjacentHTML('beforeend', '<p class="hint">تُعرض أحدث 100 طلب فقط.</p>');
+      } catch (error) {
+        container.innerHTML = `<p class="hint">${escapeHTML(error.message)}</p>`;
+      }
+    }
+
+    async function start() {
+      window.Telegram?.WebApp?.ready();
+      window.Telegram?.WebApp?.expand();
+      if (!initData) {
+        pageStatus.textContent = 'افتح لوحة الإدارة من داخل البوت على تيليجرام.';
+        document.getElementById('loginHelp').hidden = false;
+        return;
+      }
+      try {
+        await api('/api/admin/auth', { method: 'POST', body: '{}' });
+        const result = await api('/api/admin/config');
+        config = {
+          welcomeText: result.config.welcomeText,
+          botPlans: result.config.botPlans.length ? result.config.botPlans : structuredClone(defaultPlans),
+          questionOverrides: result.config.questionOverrides || {}
+        };
+        document.getElementById('welcomeText').value = config.welcomeText;
+        renderPlans();
+        renderQuestions();
+        dashboard.hidden = false;
+        pageStatus.textContent = 'تم التحقق من صلاحيات الأدمن.';
+        await loadOrders();
+      } catch (error) {
+        pageStatus.textContent = error.message;
+        document.getElementById('loginHelp').hidden = true;
+      }
+    }
+
+    document.getElementById('addPlan').addEventListener('click', () => {
+      const id = `custom-${crypto.randomUUID().slice(0, 8)}`;
+      config.botPlans.push({ id, title: 'باقة جديدة', priceEgp: 0, priceUsd: 0, detail: '' });
+      renderPlans();
+    });
+    document.getElementById('saveConfig').addEventListener('click', async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      saveStatus.textContent = 'جاري حفظ التعديلات...';
+      try {
+        const result = await api('/api/admin/config', {
+          method: 'PUT',
+          body: JSON.stringify(collectConfig())
+        });
+        config = result.config;
+        renderPlans();
+        renderQuestions();
+        saveStatus.textContent = 'تم حفظ الأسعار ورسالة الترحيب وأسئلة الفورم.';
+      } catch (error) {
+        saveStatus.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+    document.getElementById('refreshOrders').addEventListener('click', loadOrders);
+    void start();
+  </script>
+</body>
+</html>

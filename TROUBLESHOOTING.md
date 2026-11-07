@@ -9,9 +9,9 @@
 4. جرب إرسال إعلان وشوف الأخطاء
 
 ### 2. تحقق من رابط الـ Worker
-في `site/index.html` تأكد من:
+في `site/runtime-config.js` تأكد من:
 ```javascript
-const API_URL = 'https://kary-mo.YOURNAME.workers.dev/api/telegram/order';
+window.KARY_API_URL = 'https://kary-mo.YOURNAME.workers.dev/api/telegram/order';
 ```
 - استبدل `YOURNAME` برقم الـ Worker الفعلي
 - مثال الصيغة الصحيحة: `https://kary-mo.abc123.workers.dev/api/telegram/order`
