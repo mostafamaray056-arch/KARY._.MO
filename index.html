@@ -550,6 +550,80 @@
     .card{min-height:144px}
     .card .in{min-height:138px}
   }
+
+  /* Navy & gold theme: dark readable text on parchment, large clear fonts */
+  :root{--night:#0a1226;--night2:#0e1a38;--purple:#1c3a78;--violet:#5b86d6;--ink:#10224d}
+  body{
+    font-family:'Cairo',Tahoma,Arial,sans-serif;font-size:18px;color:#fff6dc;
+    background:
+      radial-gradient(ellipse at 50% 2%,rgba(47,95,179,.38),transparent 45%),
+      radial-gradient(ellipse at 4% 52%,rgba(24,52,110,.45),transparent 38%),
+      radial-gradient(ellipse at 96% 64%,rgba(20,44,98,.45),transparent 38%),
+      linear-gradient(180deg,#0a1226 0%,#0f1d42 45%,#0a1226 100%);
+    background-attachment:fixed;
+  }
+  .hero{
+    background:
+      linear-gradient(90deg,rgba(8,16,38,.3),rgba(8,16,38,.45) 46%,rgba(8,16,38,.1)),
+      linear-gradient(0deg,rgba(8,16,38,.55),transparent 58%),
+      var(--hero-img,url("kingdom-hero.jpg")) center 58% / cover no-repeat,
+      linear-gradient(135deg,#fff1ad,#1c3a78 48%,#ffdc7a);
+    box-shadow:0 16px 42px rgba(2,6,20,.6),0 0 38px rgba(47,95,179,.3);
+  }
+  .hero-copy{background:radial-gradient(ellipse at 50% 48%,rgba(8,16,38,.66),rgba(8,16,38,.34) 48%,transparent 78%)}
+  .hero-kicker{background:rgba(10,22,52,.7)}
+  .hero-copy h1{text-shadow:0 3px 0 #0d2a66,0 0 18px rgba(255,203,65,.4)}
+  .hero-copy p{font-size:clamp(17px,2.8vw,21px);color:#fff3d6}
+  .card{
+    background:linear-gradient(135deg,#fff1b2 0%,#b87520 12%,#ffe28a 23%,#8c4316 38%,#f7cb56 55%,#1c3a78 72%,#ffe49a 88%,#a55b17);
+    box-shadow:0 9px 22px rgba(2,6,20,.5),0 0 18px rgba(245,193,72,.18);
+  }
+  .card .ico{background:linear-gradient(145deg,#1f4590,#0f2557 72%,#0a1840)}
+  .card .txt h2{color:#10224d;font-size:clamp(24px,4.2vw,32px)}
+  .card .txt p{color:#2a3350;font-size:clamp(16px,2.6vw,20px)}
+  .card .arrow{color:#10224d}
+  .lead-panel{background:linear-gradient(145deg,#12275a,#0a1530 72%,#112652);box-shadow:0 12px 32px rgba(2,6,20,.55),inset 0 0 0 2px rgba(255,222,127,.35)}
+  .lead-title{font-size:30px;color:#ffe9a8}
+  .lead-card{background:rgba(7,14,34,.84);border-color:rgba(255,224,153,.5);padding:20px}
+  .lead-ask{font-size:22px;color:#fff;line-height:1.9;font-weight:800}
+  .lead-progress{color:#e8efff;font-size:17px}
+  .lead-progress-track{background:rgba(255,255,255,.22)}
+  .lead-progress-fill{background:linear-gradient(90deg,#5b86d6,#ffd15c)}
+  .input,.textarea,select.input{font-family:inherit;font-size:19px;font-weight:700;padding:15px 16px;background:#fff8e8;color:#10224d;border:1px solid #b6862d}
+  .input::placeholder,.textarea::placeholder{color:#5c6479;font-weight:600}
+  .input:focus,.textarea:focus{outline:2px solid rgba(143,180,255,.95)}
+  .check-option,.hero-entry,.bot-plan{background:linear-gradient(145deg,#fff6e0,#f5e3b8);color:#10224d;border:1px solid #c79a3a;font-size:18px;font-weight:700}
+  .check-option input{accent-color:#1f4590}
+  .hero-entry .lead-note{margin-top:0;color:#10224d;font-size:17px;font-weight:700}
+  .hero-moon-fields label{color:#10224d;font-size:17px;font-weight:800}
+  .hero-portrait,.legion-hero img{background:#12234a}
+  .legion-hero{background:linear-gradient(145deg,#fff6e0,#f2e0b4);color:#10224d}
+  .legion-hero strong{color:#10224d;font-size:18px;font-weight:900}
+  .legion-hero > span{font-size:16px}
+  .moon{font-size:24px;color:#9aa3b8}
+  .moon.normal{color:#b57d00}
+  .moon.red{color:#d62020}
+  .small-btn,.back-btn{font-family:inherit;font-size:18px;font-weight:800;padding:12px 16px;background:linear-gradient(145deg,#1f4590,#0f2557);color:#fff;border:1px solid #ffd98a}
+  .option-btn{font-size:19px;font-weight:800;color:#10224d}
+  .option-btn.selected{background:linear-gradient(135deg,#2f5fb3,#183a80);color:#fff}
+  .next-btn{font-size:20px;font-weight:900;background:linear-gradient(135deg,#2f6fe0,#1a46a8);color:#fff;border:1px solid #ffe49a}
+  .summary{font-size:19px;color:#fff6dc}
+  .summary strong{color:#ffdc76}
+  .lead-note{color:#e3ecff;font-size:17px}
+  .ad-image-preview{background:rgba(8,16,38,.7)}
+  .bot-plan strong{color:#10224d;font-size:20px}
+  .bot-plan span{color:#10224d}
+  .bot-plan .bot-bonus{color:#0b6b3a}
+  .bot-contact{color:#0b5a3a;font-size:17px}
+  .tg{background:linear-gradient(145deg,#1f4590,#0f2557);font-size:19px}
+  .admin-entry{background:rgba(10,22,52,.85);color:#ffe8a8;font-size:16px}
+  footer{color:#d6e0f7;font-size:15px}
+  @media(max-width:640px){
+    .hero{background-position:center,center,62% 54%,center}
+    .hero-copy{background:radial-gradient(ellipse at 50% 48%,rgba(8,16,38,.72),rgba(8,16,38,.36) 55%,transparent 85%)}
+    .card .txt p{font-size:15px}
+    .lead-ask{font-size:21px}
+  }
 </style>
 </head>
 <body>
@@ -788,20 +862,21 @@
   }
 
   function getAdvertisedHeroEntries() {
+    // الأبطال الأساسيون (من القائمة المحددة) لهم الأولوية في الخانات الرئيسية، والباقي إضافيون
+    let primarySlots = 5;
     return categories.flatMap((category) => (answers[`heroes_${category.key}`]?.entries || [])
       .filter((entry) => entry.name && (Number(entry.normal) >= 3 || (canShowRedHilal() && Number(entry.red) > 0)))
-      .map((entry) => ({
-        name: entry.name,
-        normal: Number(entry.normal),
-        red: canShowRedHilal() ? Number(entry.red || 0) : 0,
-        portrait: heroPortraits[entry.name],
-        primary: Boolean(entry.primary)
-      })));
-  }
-
-  function getSelectedPrimaryHeroCount() {
-    return categories.reduce((count, category) => count + (answers[`heroes_${category.key}`]?.entries || [])
-      .filter((entry) => entry.primary && primaryAdHeroNames.includes(entry.name)).length, 0);
+      .map((entry) => {
+        const primary = primarySlots > 0 && primaryAdHeroNames.includes(entry.name);
+        if (primary) primarySlots -= 1;
+        return {
+          name: entry.name,
+          normal: Number(entry.normal),
+          red: canShowRedHilal() ? Number(entry.red || 0) : 0,
+          portrait: heroPortraits[entry.name],
+          primary
+        };
+      }));
   }
 
   function formatHeroEntry(entry) {
@@ -1943,6 +2018,20 @@
     return blobToDataUrl(blob);
   }
 
+  (async function recolorHeroBackground() {
+    try {
+      const image = await loadCanvasImage(new URL('kingdom-hero.jpg', document.baseURI).href);
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      canvas.getContext('2d').drawImage(image, 0, 0);
+      recolorCanvasToNavy(canvas);
+      document.documentElement.style.setProperty('--hero-img', `url(${canvas.toDataURL('image/jpeg', 0.85)})`);
+    } catch {
+      // تبقى صورة الهيدر الأصلية إذا تعذر تغيير ألوانها
+    }
+  })();
+
   async function sendLeadToTelegram(button, status) {
     button.disabled = true;
     button.textContent = 'جاري الإرسال...';
@@ -1987,12 +2076,6 @@
             </div>
           </div>`
         : '<p class="lead-note">اختار البطل الأول عشان تظهر خانات الهلال.</p>';
-      const primaryChoice = entry.name && primaryAdHeroNames.includes(entry.name)
-        ? `<label class="hero-primary-choice">
-            <input type="checkbox" data-hero-field="primary" ${entry.primary ? 'checked' : ''} ${getSelectedPrimaryHeroCount() >= 5 && !entry.primary ? 'disabled' : ''}>
-            بطل أساسي في الإعلان
-          </label>`
-        : '';
       const options = heroRosters[q.category.key].map((name) => {
         const selectedElsewhere = state.entries.some((other, otherIndex) => otherIndex !== index && other.name === name);
         return `<option value="${escapeHTML(name)}" ${entry.name === name ? 'selected' : ''} ${selectedElsewhere ? 'disabled' : ''}>${escapeHTML(name)}</option>`;
@@ -2003,7 +2086,6 @@
             <option value="">اختار بطلًا من القائمة</option>${options}
           </select>
           ${selectedHero}
-          ${primaryChoice}
           <button class="small-btn" type="button" data-remove-hero="${index}">حذف البطل</button>
         </div>
       `;
@@ -2015,7 +2097,7 @@
         <button class="small-btn" type="button" data-add-hero ${state.entries.length >= heroRosters[q.category.key].length ? 'disabled' : ''}>إضافة بطل</button>
         <button class="small-btn" type="button" data-no-heroes>${isNone ? 'تم اختيار: لا يوجد' : 'لا يوجد أبطال من هذه الفئة'}</button>
       </div>
-      <p class="lead-note">الأبطال الأساسيون المحددون: ${getSelectedPrimaryHeroCount()}/5. ${canShowRedHilal() ? 'اكتب الهلال الأصفر والأحمر. ' : 'اكتب الهلال الأصفر؛ الهلال الأحمر متاح من مستوى قلعة 31. '}علّم 5 أبطال أساسيين من صلاح الدين وبرقوق وقطز ومحمد الثاني وعمر المختار وكافور الإخشيدي ومالك بن الريب. الباقي يُضاف كأبطال إضافيين (حتى 6 في الإعلان).</p>
+      <p class="lead-note">${canShowRedHilal() ? 'اكتب الهلال الأصفر والأحمر. ' : 'اكتب الهلال الأصفر؛ الهلال الأحمر متاح من مستوى قلعة 31. '}أبطال صلاح الدين وبرقوق وقطز ومحمد الثاني وعمر المختار وكافور الإخشيدي ومالك بن الريب لهم الأولوية في الإعلان (حتى 5)، وباقي الأبطال يظهرون في الأبطال الإضافيين (حتى 6).</p>
     </div>`;
   }
 
@@ -2357,11 +2439,6 @@
       }
       if (state.entries.some((entry) => Number(entry.normal) < 3 && (!canShowRedHilal() || Number(entry.red) === 0))) {
         alert('للعرض، اختر أبطال فئة 5 نجوم ولديهم 3 هلال أصفر على الأقل أو هلال أحمر.');
-        return;
-      }
-      if (q.category.key === categories[categories.length - 1].key
-        && getSelectedPrimaryHeroCount() !== 5) {
-        alert(`علّم 5 أبطال أساسيين بالضبط من القائمة المحددة. المحدد حاليًا: ${getSelectedPrimaryHeroCount()}.`);
         return;
       }
       if (q.category.key === categories[categories.length - 1].key
