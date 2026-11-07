@@ -1921,7 +1921,7 @@
       else h = (r - g) / d + 4;
       h *= 60;
       if (h < 245) continue;
-      const s = (d / max) * 0.5, v = max * 0.82;
+      const s = (d / max) * 0.6, v = max * 0.6;
       const nh = (222 + (h - 290) * 0.2) / 60;
       const c = v * s, x = c * (1 - Math.abs((nh % 2) - 1)), m = v - c;
       const [nr, ng, nb] = nh < 4 ? [0, x, c] : [x, 0, c];
