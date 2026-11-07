@@ -1897,15 +1897,42 @@
     });
   }
 
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('تعذر تجهيز صورة الإعلان. حاول مرة أخرى.'));
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function buildLeadPhoto() {
+    const canvas = await createLeadImageCanvas();
+    let blob;
+    for (const quality of [0.92, 0.8, 0.7, 0.6]) {
+      blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
+      if (blob && blob.size <= 1_000_000) break;
+    }
+    if (!blob) throw new Error('تعذر تجهيز صورة الإعلان. حاول مرة أخرى.');
+    return blobToDataUrl(blob);
+  }
+
   async function sendLeadToTelegram(button, status) {
     button.disabled = true;
     button.textContent = 'جاري الإرسال...';
-    status.textContent = 'جاري إرسال بيانات الفورم إلى تيليجرام...';
+    status.textContent = 'جاري تجهيز الصورة وإرسالها إلى تيليجرام...';
     try {
+      const payload = { message: buildTelegramLeadMessage() };
+      try {
+        payload.photo = await buildLeadPhoto();
+        payload.message = `📋 طلب جديد من فورم الموقع\nرقم العرض: ${answers.offerNumber || '—'}`;
+      } catch {
+        // إذا فشل رسم الصورة يتم إرسال البيانات نصًا حتى لا يضيع الطلب
+      }
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: buildTelegramLeadMessage() })
+        body: JSON.stringify(payload)
       });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'تعذر إرسال الطلب.');
