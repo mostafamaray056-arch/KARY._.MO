@@ -841,30 +841,33 @@
     return rows;
   }
 
-  /* الرسالة اللي بتيجي تحت الصورة على تليجرام: التفاصيل اللي مش في الصورة */
   function buildTelegramLeadMessage() {
-    const phone = answers.whatsapp || '';
-    const heroes = getAdvertisedHeroEntries();
-    const primaryHeroes = heroes.filter((hero) => hero.primary);
-    const additionalHeroes = heroes.filter((hero) => !hero.primary).slice(0, 6);
-    const storeContactLines = STORE_PHONES.map((storePhone) => {
-      const digits = storePhone.replace(/\D/g, '');
-      return `📞 ${storePhone}: https://wa.me/${digits}`;
+    const lines = ['📋 طلب جديد من فورم الموقع', '━━━━━━━━━━━━'];
+    getQuestions().forEach((question) => {
+      if (question.type === 'heroes') {
+        const state = answers[question.key] || { none: false, entries: [] };
+        const value = state.none
+          ? 'لا يوجد'
+          : (state.entries || []).map((entry) => formatHeroEntry({
+            name: entry.name,
+            normal: Number(entry.normal || 0),
+            red: canShowRedHilal() ? Number(entry.red || 0) : 0
+          })).join('، ') || '—';
+        lines.push(`${question.text}: ${value}`);
+        return;
+      }
+
+      const value = question.type === 'equipment'
+        ? (answers[question.key] || []).map((item) => `${item.color}: ${item.count} قطعة`).join('، ')
+        : question.type === 'multiselect'
+          ? (answers[question.key] || []).join('، ')
+          : question.key === 'reset' || question.key === 'power'
+            ? formatAbbreviated(answers[question.key])
+            : formatAnswer(question);
+      lines.push(`${question.text}: ${value || '—'}`);
     });
-    const lines = [
-      '🏰 إعلان جديد — بيع قلعة',
-      '━━━━━━━━━━━━',
-      `🔢 رقم العرض: ${answers.offerNumber || '—'}`,
-      `📱 واتساب صاحب الإعلان: \u2066${phone}\u2069`,
-      phone ? `💬 كلّمه مباشرة: https://wa.me/${phone.replace(/\D/g, '')}` : '',
-      '📩 للاستفسار تواصل مع كارينا أو محمد:',
-      ...storeContactLines,
-      primaryHeroes.length ? `👑 الأبطال الأساسيون: ${primaryHeroes.map(formatHeroEntry).join('، ')}` : '',
-      additionalHeroes.length ? `✨ الأبطال الإضافيون: ${additionalHeroes.map(formatHeroEntry).join('، ')}` : '',
-      `🔗 الروابط: ${adAnswer('links')}`,
-      `📦 الموارد: ${adAnswer('resources')}`
-    ];
-    return lines.filter(Boolean).join('\n');
+    lines.push('━━━━━━━━━━━━', `رقم العرض: ${answers.offerNumber || '—'}`);
+    return lines.join('\n');
   }
 
   function wrapCanvasText(context, text, maxWidth) {
@@ -1894,31 +1897,23 @@
     });
   }
 
-  async function sendLeadToTelegram(button, status, imageCanvas) {
+  async function sendLeadToTelegram(button, status) {
     button.disabled = true;
     button.textContent = 'جاري الإرسال...';
-    status.textContent = 'بنجهّز صورة الإعلان وبنبعت الصورة والتفاصيل إلى تيليجرام...';
+    status.textContent = 'جاري إرسال بيانات الفورم إلى تيليجرام...';
     try {
-      const image = await canvasToJpeg(imageCanvas);
-      if (image.size > 1400000) throw new Error('صورة الإعلان كبيرة. قلل تفاصيل الإعلان وحاول مرة أخرى.');
-      const bytes = new Uint8Array(await image.arrayBuffer());
-      let binary = '';
-      for (let offset = 0; offset < bytes.length; offset += 0x8000) {
-        binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
-      }
-      const photo = `data:${image.type};base64,${btoa(binary)}`;
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: buildTelegramLeadMessage(), photo })
+        body: JSON.stringify({ message: buildTelegramLeadMessage() })
       });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'تعذر إرسال الطلب.');
-      button.textContent = 'تم إرسال الصورة والتفاصيل ✓';
-      status.textContent = 'وصلت صورة الإعلان والتفاصيل بنجاح إلى تيليجرام.';
+      button.textContent = 'تم إرسال البيانات ✓';
+      status.textContent = 'وصلت بيانات الفورم بنجاح إلى تيليجرام.';
     } catch (error) {
       button.disabled = false;
-      button.textContent = 'إرسال صورة الإعلان والتفاصيل إلى تيليجرام';
+      button.textContent = 'إرسال البيانات إلى تيليجرام';
       status.textContent = error.message || 'تعذر الاتصال بالسيرفر. حاول مرة أخرى.';
     }
   }
@@ -2110,36 +2105,19 @@
       leadCard.innerHTML = `
         <div class="lead-ask">خلصت إدخال البيانات — راجعها قبل ما نكمل ✅</div>
         <div class="summary">${summary}</div>
-        <div class="ad-image-preview">
-          <p>معاينة صورة الإعلان اللي هتوصلك</p>
-          <img data-ad-preview alt="معاينة صورة إعلان بيع القلعة">
-        </div>
         <p class="lead-note" data-send-status>راجع بياناتك قبل الإرسال.</p>
         <div class="action-row">
           <button class="back-btn" onclick="reviewAnswers()">مراجعة الإجابات</button>
-          <button class="next-btn" type="button" data-send-lead disabled>جاري تجهيز صورة الإعلان...</button>
+          <button class="next-btn" type="button" data-send-lead>إرسال البيانات إلى تيليجرام</button>
         </div>
         <button class="small-btn" type="button" data-restart-lead>بدء من جديد</button>
       `;
-      const preview = leadCard.querySelector('[data-ad-preview]');
       const sendButton = leadCard.querySelector('[data-send-lead]');
       const sendStatus = leadCard.querySelector('[data-send-status]');
-      let imageCanvas;
       sendButton.addEventListener('click', () => {
-        if (imageCanvas) sendLeadToTelegram(sendButton, sendStatus, imageCanvas);
+        sendLeadToTelegram(sendButton, sendStatus);
       });
       leadCard.querySelector('[data-restart-lead]').addEventListener('click', showLeadFlow);
-      createLeadImageCanvas().then((canvas) => {
-        if (!preview.isConnected) return;
-        imageCanvas = canvas;
-        preview.src = canvas.toDataURL('image/jpeg', 0.78);
-        sendButton.disabled = false;
-        sendButton.textContent = 'إرسال صورة الإعلان والتفاصيل إلى تيليجرام';
-        sendStatus.textContent = 'راجع صورة الإعلان والبيانات قبل الإرسال.';
-      }).catch((error) => {
-        if (!preview.isConnected) return;
-        sendStatus.textContent = error.message || 'تعذر تجهيز صورة الإعلان. حاول مرة أخرى.';
-      });
       return;
     }
 
