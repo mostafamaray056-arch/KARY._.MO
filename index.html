@@ -2205,9 +2205,7 @@
     const isLast = currentStep === activeQuestions.length - 1;
     const note = q.type === 'tel'
       ? 'اكتب رقم واتسابك مع كود الدولة؛ آخر 5 أرقام منه هتكون رقم العرض تلقائيًا.'
-      : q.key === 'reset'
-        ? 'شارات مجد لازم تكون أقل من التعويض.'
-        : 'الإجابة مطلوبة علشان تقدر تكمل.';
+      : 'الإجابة مطلوبة علشان تقدر تكمل.';
     content += `<div class="action-row">${isFirst ? '<div></div>' : '<button class="back-btn" onclick="goBack()">رجوع</button>'}<button class="next-btn" onclick="nextStep()">${isLast ? 'مراجعة البيانات' : 'التالي'}</button></div><p class="lead-note">${note}</p>`;
 
     leadCard.innerHTML = content;
@@ -2406,15 +2404,6 @@
     if (q.key === 'links' && !answer.length) {
       alert('اختر رابطًا واحدًا على الأقل.');
       return;
-    }
-
-    if (q.key === 'power' || q.key === 'reset') {
-      const power = Number(answers.power);
-      const reset = Number(answer);
-      if (q.key === 'reset' && reset >= power) {
-        alert('شارات مجد لازم تكون أقل من التعويض.');
-        return;
-      }
     }
 
     if (currentStep === activeQuestions.length - 1 && getAdvertisedHeroEntries().length < 5) {
