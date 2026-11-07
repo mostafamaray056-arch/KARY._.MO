@@ -738,9 +738,59 @@
     'حليمة خاتون': 'halima.jpg',
     'أتيلا الهوني': 'attila.jpg',
     'أورخان غازي': 'orhan.jpg',
-    'زرقاء اليمامة': 'zarqa.jpg'
+    'زرقاء اليمامة': 'zarqa.jpg',
+    'أرسلان': 'arslan.jpg',
+    'القعقاع': 'qaqaa.jpg',
+    'أبوليلي المهلهل': 'abu-layla-al-muhalhil.jpg',
+    'سنى علي': 'sunni-ali.jpg',
+    'عثمان': 'uthman.jpg',
+    'عنترة': 'antara.jpg',
+    'المنصور': 'al-mansur.jpg',
+    'فاطمة الفهرى': 'fatima-al-fihri.jpg',
+    'عمرو بن كلثوم': 'amr-bin-kulthum.jpg',
+    'سليمان': 'suleiman.jpg',
+    'الخنساء': 'al-khansa.jpg',
+    'بوشكين': 'pushkin.jpg',
+    'السلطانة هيام': 'sultana-hayam.jpg',
+    'مراد الريّس': 'murad-reis.jpg',
+    'أضحى': 'adha.jpg',
+    'امرؤ القيس': 'imru-al-qais.jpg',
+    'الطارق': 'al-tariq.jpg',
+    'صباح': 'sabah.jpg',
+    'المظفر': 'al-muzaffar.jpg',
+    'بايزيد الأول': 'bayezid-i.jpg',
+    'زنوبيا': 'zenobia.jpg',
+    'بيبرس': 'baybars.jpg',
+    'ديبونيجورو': 'diponegoro.jpg',
+    'حاتم الطائي': 'hatim-al-tai.jpg',
+    'الكاهنة': 'al-kahina.jpg',
+    'بلقيس': 'bilqis.jpg',
+    'جساس': 'jassas.jpg',
+    'سيد الكنوز': 'sayyid-al-kunuz.jpg',
+    'العجوز القاتل': 'old-assassin.jpg',
+    'قادر': 'qadir.jpg',
+    'همام': 'hammam.jpg',
+    'سيلين': 'selin.jpg',
+    'شجرة الدر': 'shajar-al-durr.jpg',
+    'السلطانة مريم': 'sultana-maryam.jpg',
+    'بن تاشفين': 'ibn-tashfin.jpg',
+    'السلطان سليم': 'sultan-selim.jpg',
+    'شجاع': 'shuja.jpg',
+    'سعود': 'saud.jpg',
+    'صابرين': 'sabrin.jpg',
+    'المارد': 'al-marid.jpg',
+    'بن مرشد': 'ibn-murshid.jpg',
+    'الصالح علي': 'al-salih-ali.jpg'
   };
   const heroSuggestions = Object.keys(heroPortraits).filter((name) => !primaryAdHeroNames.includes(name));
+  // مطابقة الأسماء المكتوبة بدون الاهتمام بالتشكيل أو شكل الهمزة والألف المقصورة
+  const normalizeHeroName = (name) => String(name).trim()
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/\s+/g, ' ');
+  const heroPortraitByName = new Map(Object.entries(heroPortraits).map(([name, file]) => [normalizeHeroName(name), file]));
   const questions = [
     { key: 'whatsapp', text: 'العرض 🦆', type: 'tel', placeholder: 'رقم واتساب بكود الدولة، مثال: +201012345678' },
     { key: 'links', text: 'اختار الروابط 🔗', type: 'multiselect', options: ['IGG', 'Google', 'Facebook', 'iPhone', 'Game Center', 'Device Binding'] },
@@ -861,7 +911,7 @@
       name: String(entry.name).trim(),
       normal: Number(entry.normal || 0),
       red: canShowRedHilal() ? Number(entry.red || 0) : 0,
-      portrait: heroPortraits[String(entry.name).trim()],
+      portrait: heroPortraitByName.get(normalizeHeroName(entry.name)),
       primary
     });
     const named = (key) => (answers[`heroes_${key}`]?.entries || []).filter((entry) => String(entry.name || '').trim());
@@ -2435,11 +2485,11 @@
         alert(isExtraStep ? 'اكتب اسم البطل أو احذف الخانة الفاضية.' : 'اختار بطلًا من القائمة أو احذف الخانة الفاضية.');
         return;
       }
-      if (new Set(selectedNames).size !== selectedNames.length) {
+      if (new Set(selectedNames.map(normalizeHeroName)).size !== selectedNames.length) {
         alert(isExtraStep ? 'اكتب كل بطل مرة واحدة فقط.' : 'اختار كل بطل مرة واحدة فقط.');
         return;
       }
-      if (isExtraStep && selectedNames.some((name) => primaryAdHeroNames.includes(name))) {
+      if (isExtraStep && selectedNames.some((name) => primaryAdHeroNames.some((main) => normalizeHeroName(main) === normalizeHeroName(name)))) {
         alert('الأبطال الأساسيون (صلاح الدين وبرقوق وقطز ومحمد الثاني وعمر المختار وكافور الإخشيدي ومالك بن الريب) اختارهم من الخطوة الأولى.');
         return;
       }
