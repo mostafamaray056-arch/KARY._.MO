@@ -2060,8 +2060,8 @@
     const maxEntries = isExtra ? 6 : heroRosters.main.length;
     const moonFields = (entry) => `
             <div class="hero-moon-fields">
-              <label>🌙 عدد الهلال الأصفر (اختياري)
-                <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="normal" value="${escapeHTML(entry.normal ?? '')}" placeholder="من 0 إلى 5" aria-label="عدد الهلال الأصفر">
+              <label>🌙 عدد الهلال الأصفر
+                <input class="input" type="number" min="1" max="5" step="1" inputmode="numeric" data-hero-field="normal" value="${escapeHTML(entry.normal ?? '')}" placeholder="من 1 إلى 5" aria-label="عدد الهلال الأصفر">
               </label>
               ${canShowRedHilal() ? `<label>الهلال الأحمر (اختياري)
                 <input class="input" type="number" min="0" max="5" step="1" inputmode="numeric" data-hero-field="red" value="${escapeHTML(entry.red ?? '0')}" placeholder="من 0 إلى 5" aria-label="عدد الهلال الأحمر">
@@ -2449,12 +2449,12 @@
       }
       for (const entry of state.entries) {
         entry.name = String(entry.name).trim();
-        const yellowCount = entry.normal === '' || entry.normal === undefined ? 0 : Number(entry.normal);
+        const yellowCount = entry.normal === '' || entry.normal === undefined ? NaN : Number(entry.normal);
         const redCount = !canShowRedHilal() || entry.red === '' || entry.red === undefined ? 0 : Number(entry.red);
-        if (!Number.isInteger(yellowCount) || yellowCount < 0 || yellowCount > 5 || !Number.isInteger(redCount) || redCount < 0 || redCount > yellowCount) {
+        if (!Number.isInteger(yellowCount) || yellowCount < 1 || yellowCount > 5 || !Number.isInteger(redCount) || redCount < 0 || redCount > yellowCount) {
           alert(canShowRedHilal()
-            ? 'الهلال الأصفر يجب أن يكون من 0 إلى 5، والهلال الأحمر من 0 إلى عدد الهلال الأصفر.'
-            : 'الهلال الأصفر يجب أن يكون من 0 إلى 5.');
+            ? `اكتب عدد الهلال الأصفر لكل بطل من 1 إلى 5، والهلال الأحمر من 0 إلى عدد الهلال الأصفر. (${entry.name})`
+            : `اكتب عدد الهلال الأصفر لكل بطل من 1 إلى 5. (${entry.name})`);
           return;
         }
       }
