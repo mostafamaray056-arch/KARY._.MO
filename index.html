@@ -2219,7 +2219,20 @@
       const payload = { message: buildTelegramLeadMessage() };
       try {
         payload.photo = await buildLeadPhoto();
-        payload.message = `📋 طلب جديد من فورم الموقع\nرقم العرض: ${answers.offerNumber || '—'}\nواتساب البائع: ${answers.whatsapp || '—'}`;
+        const ltr = (value) => `\u200E${value}`;
+        const storeLines = STORE_PHONES.length ? STORE_PHONES : [`+${WHATSAPP_PHONE}`];
+        payload.message = [
+          '🏰 عرض قلعة',
+          `🔢 رقم العرض: ${answers.offerNumber || '—'}`,
+          '━━━━━━━━━━━━',
+          '📱 واتساب البائع:',
+          ltr(answers.whatsapp || '—'),
+          '━━━━━━━━━━━━',
+          '💬 تواصل مع كارينا أو محمد على واتساب:',
+          ...storeLines.slice(0, 2).map((phone) => ltr(phone.replace(/\s+/g, ''))),
+          '━━━━━━━━━━━━',
+          '🎥 متنساش تصور فيديو'
+        ].join('\n');
       } catch {
         // إذا فشل رسم الصورة يتم إرسال البيانات نصًا حتى لا يضيع الطلب
       }
