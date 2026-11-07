@@ -685,10 +685,10 @@
     { key: 'gold', text: 'الذهب 🪙', type: 'number', placeholder: 'من 1 إلى 100,000,000، الكسور مسموحة', min: 1, max: 100000000, decimals: true },
     { key: 'bombs', text: 'القنابل 🎱', type: 'number', placeholder: 'من 0 إلى 10,000', min: 0, max: 10000 },
     { key: 'farming', text: 'الزرع 🌱', type: 'number', placeholder: 'من 0 إلى 10,000', min: 0, max: 10000 },
-    { key: 'ignition', text: 'الإشعال 🔥', type: 'number', placeholder: 'من 500,000 إلى 100,000,000، الكسور مسموحة', min: 500000, max: 100000000, decimals: true },
+    { key: 'ignition', text: 'الإشعال 🔥', type: 'number', placeholder: 'من 100,000 إلى 60,000,000، الكسور مسموحة', min: 100000, max: 60000000, decimals: true },
     { key: 'medals', text: 'أوسمة ثلاثية أو نادرة 🎊', type: 'number', placeholder: 'من 1 إلى 50 وسامًا ثلاثيًا أو نادرًا', min: 1, max: 50, unit: ' وسام' },
     { key: 'power', text: 'التعويض ⚡', type: 'number', placeholder: 'قيمة التعويض من 10 إلى 5,000,000,000، الكسور مسموحة', min: 10, max: 5000000000, decimals: true, abbreviated: true },
-    { key: 'reset', text: 'التصفير', type: 'number', placeholder: 'اكتب رقمًا أقل من التعويض', min: 0, decimals: true, abbreviated: true },
+    { key: 'reset', text: 'شارات مجد', type: 'number', placeholder: 'من 500 إلى 10,000 شارة', min: 500, max: 10000, unit: ' شارة' },
     { key: 'equipment', text: 'عتاد القلعة: الألوان وعدد القطع', type: 'equipment', options: ['رمادي', 'أخضر', 'أزرق', 'بنفسجي', 'ذهبي', 'أحمر'] }
   ];
 
@@ -1506,12 +1506,11 @@
     });
     const descriptionRows = [
       ['رقم العرض', answers.offerNumber || '—', 'ltr'],
-      ['واتساب البائع', answers.whatsapp || '—', 'ltr'],
       ['مستوى القلعة', adAnswer('castle'), 'ltr'],
       ['عدد الشارات', adAnswer('seals'), 'ltr']
     ];
     descriptionRows.forEach(([label, value, direction], index) => {
-      const y = 414 + index * 34;
+      const y = 426 + index * 46;
       if (index) {
         ctx.save();
         ctx.strokeStyle = 'rgba(111, 66, 34, .25)';
@@ -1952,7 +1951,7 @@
       const payload = { message: buildTelegramLeadMessage() };
       try {
         payload.photo = await buildLeadPhoto();
-        payload.message = `📋 طلب جديد من فورم الموقع\nرقم العرض: ${answers.offerNumber || '—'}`;
+        payload.message = `📋 طلب جديد من فورم الموقع\nرقم العرض: ${answers.offerNumber || '—'}\nواتساب البائع: ${answers.whatsapp || '—'}`;
       } catch {
         // إذا فشل رسم الصورة يتم إرسال البيانات نصًا حتى لا يضيع الطلب
       }
@@ -2207,7 +2206,7 @@
     const note = q.type === 'tel'
       ? 'اكتب رقم واتسابك مع كود الدولة؛ آخر 5 أرقام منه هتكون رقم العرض تلقائيًا.'
       : q.key === 'reset'
-        ? 'التصفير لازم يكون أقل من التعويض.'
+        ? 'شارات مجد لازم تكون أقل من التعويض.'
         : 'الإجابة مطلوبة علشان تقدر تكمل.';
     content += `<div class="action-row">${isFirst ? '<div></div>' : '<button class="back-btn" onclick="goBack()">رجوع</button>'}<button class="next-btn" onclick="nextStep()">${isLast ? 'مراجعة البيانات' : 'التالي'}</button></div><p class="lead-note">${note}</p>`;
 
@@ -2413,7 +2412,7 @@
       const power = Number(answers.power);
       const reset = Number(answer);
       if (q.key === 'reset' && reset >= power) {
-        alert('التصفير لازم يكون أقل من التعويض.');
+        alert('شارات مجد لازم تكون أقل من التعويض.');
         return;
       }
     }
